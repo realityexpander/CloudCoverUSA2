@@ -33,7 +33,8 @@ fun App() {
 //        val state = rememberWebViewState("https://realityexpander.github.io/")
 //        val state = rememberWebViewState("https://www.ssec.wisc.edu/data/us_comp/small/").apply {
 //        val webviewState = rememberWebViewStateWithHTMLData(data = cloudViewPageHtml)
-        val webviewState = rememberWebViewState("https://githubusercontent.com/realityexpander/CloudCoverUSA2/ssec.html")
+//        val webviewState = rememberWebViewState("https://raw.githubusercontent.com/realityexpander/CloudCoverUSA2/ssec.html")
+        val webviewState = rememberWebViewState("https://realityexpander.github.io/CloudCoverUSA2/ssec.html")
         val jsBridge = rememberWebViewJsBridge()
 
         DisposableEffect(Unit) {
