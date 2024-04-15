@@ -1,6 +1,7 @@
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
 import androidx.compose.material.LinearProgressIndicator
@@ -83,6 +84,7 @@ fun App() {
 
             WebView(
                 webviewState,
+                modifier = Modifier.fillMaxSize(),
                 webViewJsBridge = jsBridge,
             )
         }
