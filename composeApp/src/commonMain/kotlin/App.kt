@@ -61,7 +61,8 @@ fun App() {
             Button(
                 onClick = {
                     //showContent = !showContent
-                    jsBridge.webView?.evaluateJavaScript("\$(\".jsani-stopplay-button\").click()")
+                    //jsBridge.webView?.evaluateJavaScript("\$(\".jsani-stopplay-button\").click()")
+                    jsBridge.webView?.reload()
                 }
             ) {
                 Text("Click me!")
