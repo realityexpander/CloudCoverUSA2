@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.min
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
+import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import kotlinx.coroutines.delay
@@ -108,6 +109,7 @@ fun App() {
                                     "$loadingLog\nImage $count cancelled, ${request.memoryCacheKey}, ${request.diskCacheKey}."
                             }
                         )
+                        .diskCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
                         .build()
                     add(ir)
                 }
@@ -190,7 +192,6 @@ fun App() {
                         .onGloballyPositioned {
                             contentWidth = it.size.width
                             contentHeight = it.size.height
-                            println("Global position: ${it.size}, $contentWidth, $contentHeight, $imageWidth, $imageHeight")
 
                             if (isFirstFrame && contentWidth > 0 && imageWidth > 0) {
                                 // Set correct scale for a given image and screen size
