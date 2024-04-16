@@ -60,8 +60,8 @@ fun App() {
         var loadingLog by remember { mutableStateOf("Idle.") }
         var finishedCount by remember { mutableStateOf(0) }
         val localContext = LocalPlatformContext.current
-        var imageWidth by remember { mutableStateOf(0f) }
-        var imageHeight by remember { mutableStateOf(0f) }
+        var imageWidth by remember { mutableStateOf(800f) }
+        var imageHeight by remember { mutableStateOf(600f) }
         var isFirstFrame by remember { mutableStateOf(true) }
         val localScreenWidth = getScreenWidth()
         val localScreenHeight = getScreenHeight()
@@ -135,15 +135,15 @@ fun App() {
             }
         }
 
-        // Change scale and offset when content size changes (e.g. rotation)
-        LaunchedEffect(contentWidth, contentHeight) {
-            if (contentWidth == 0 || contentHeight == 0) return@LaunchedEffect
-            if (imageWidth == 0f || imageHeight == 0f) return@LaunchedEffect
-
-            isLandscape = contentWidth > contentHeight
-            scale = max(contentHeight / imageHeight, contentWidth / imageWidth)
-            offset = Offset.Zero
-        }
+//        // Change scale and offset when content size changes (e.g. rotation)
+//        LaunchedEffect(contentWidth, contentHeight) {
+//            if (contentWidth == 0 || contentHeight == 0) return@LaunchedEffect
+//            if (imageWidth == 0f || imageHeight == 0f) return@LaunchedEffect
+//
+//            isLandscape = contentWidth > contentHeight
+//            scale = max(contentHeight / imageHeight, contentWidth / imageWidth)
+//            offset = Offset.Zero
+//        }
 
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize()
@@ -190,6 +190,7 @@ fun App() {
                         .onGloballyPositioned {
                             contentWidth = it.size.width
                             contentHeight = it.size.height
+                            println("Global position: ${it.size}, $contentWidth, $contentHeight, $imageWidth, $imageHeight")
 
                             if (isFirstFrame && contentWidth > 0 && imageWidth > 0) {
                                 // Set correct scale for a given image and screen size
@@ -245,7 +246,8 @@ fun App() {
                     Spacer(modifier = Modifier.size(10.dp))
 
                     Text(
-                        "Drag & Pinch controls map.",
+                        "Drag & Pinch\n" +
+                                "controls map.",
                         color = Color.White.copy(alpha = 0.5f)
                     )
                 }
@@ -300,7 +302,10 @@ fun App() {
                             isLoadingMovie = false
                         }
                     )
-                    Row {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         Button(
                             onClick = {
                                 is5DayMovieVisible = false
