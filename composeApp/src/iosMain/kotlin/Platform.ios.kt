@@ -9,10 +9,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.AVFoundation.AVPlayer
+import platform.AVFoundation.AVPlayerItem
 import platform.AVFoundation.AVPlayerLayer
+import platform.AVFoundation.AVPlayerLooper
+import platform.AVFoundation.AVQueuePlayer
 import platform.AVFoundation.play
 import platform.AVKit.AVPlayerViewController
 import platform.CoreGraphics.CGRect
+import platform.CoreMedia.CMTimeMake
+import platform.CoreMedia.CMTimeRangeMake
 import platform.Foundation.NSURL
 import platform.QuartzCore.CATransaction
 import platform.QuartzCore.kCATransactionDisableActions
@@ -47,16 +52,26 @@ actual fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> U
     val player = remember { AVPlayer(uRL = NSURL.URLWithString(url)!!) }
     val playerLayer = remember { AVPlayerLayer() }
     val avPlayerViewController = remember { AVPlayerViewController() }
-    avPlayerViewController.player = player
+
+    val player2 = remember { AVQueuePlayer() }
+    val loopy = remember {
+        AVPlayerLooper(
+            player2,
+            AVPlayerItem(NSURL.URLWithString(url)!!),
+            CMTimeRangeMake(CMTimeMake(0, 1), duration = CMTimeMake(13,1)))
+        }
+
+    avPlayerViewController.player = player2
     avPlayerViewController.showsPlaybackControls = true
 
-    playerLayer.player = player
+    playerLayer.player = player2
     // Use a UIKitView to integrate with your existing UIKit views
     UIKitView(
         factory = {
             // Create a UIView to hold the AVPlayerLayer
             val playerContainer = UIView()
             playerContainer.addSubview(avPlayerViewController.view)
+
             // Return the playerContainer as the root UIView
             playerContainer
         },
@@ -71,7 +86,9 @@ actual fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> U
         update = { view ->
             player.play()
             avPlayerViewController.player!!.play()
+
             onSetupComplete()
         },
-        modifier = modifier)
+        modifier = modifier
+    )
 }

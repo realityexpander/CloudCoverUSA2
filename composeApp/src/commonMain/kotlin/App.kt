@@ -1,3 +1,4 @@
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -5,11 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -25,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.key.Key.Companion.T
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -62,6 +69,8 @@ fun App() {
         var contentHeight by remember { mutableStateOf(0) }
         var isLoadingFinished by remember { mutableStateOf(false) }
         var is5DayMovieVisible by remember { mutableStateOf(false) }
+        var isShowAboutInfo by remember { mutableStateOf(false) }
+        val isDebugModeActive = false
 
         // check orientation
         var isLandscape by remember(localScreenWidth, localScreenHeight) {
@@ -195,27 +204,77 @@ fun App() {
 
             Column(
                 Modifier.fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
-                Button(
-                    onClick = {
-                        showLog = !showLog
-                    }
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("Show Log")
-                }
-                Button(
-                    onClick = {
-                        is5DayMovieVisible = true
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Button(
+                        onClick = {
+                            isShowAboutInfo = !isShowAboutInfo
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.5f),
+                        ),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+
+                    ) {
+                        Text(
+                            "About",
+                            color = Color.White.copy(alpha = 0.5f)
+                        )
                     }
-                ) {
-                    Text("Show 5 Day Movie")
+                    Spacer(modifier = Modifier.size(10.dp))
+
+                    Button(
+                        onClick = {
+                            is5DayMovieVisible = true
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                        ),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            "5 Day Movie",
+                            color = Color.White.copy(alpha = 0.5f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(10.dp))
+
+                    Text(
+                        "Drag & Pinch controls map.",
+                        color = Color.White.copy(alpha = 0.5f)
+                    )
                 }
 
+                 if (isDebugModeActive) {
+                    Button(
+                        onClick = {
+                            showLog = !showLog
+                        }
+                    ) {
+                        Text("Show Log")
+                    }
+                 }
                 if (showLog) {
                     Text(
                         loadingLog,
                         color = Color.White
+                    )
+                }
+
+                if(isShowAboutInfo) {
+                    Text(
+                        "Cloud Cover USA 2.0\n" +
+                                "by Chris Athanas\n" +
+                                "realityexpanderdev@gmail.com\n" +
+                                "github.com/realityexpander\n"
+                                ,
+                        color = Color.White,
+                        modifier = Modifier.padding(10.dp)
                     )
                 }
 
@@ -225,37 +284,39 @@ fun App() {
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
-                Text(
-                    text = "isLandscape: $isLandscape",
-                    color = Color.White
-                )
             }
 
             var isLoadingMovie by remember { mutableStateOf(true) }
             if (is5DayMovieVisible) {
                 Box(
                     Modifier.fillMaxSize(),
-//                        contentAlignment = Alignment.Center
                 ) {
                     VideoPlayer(
                         modifier = Modifier
                             .fillMaxWidth(),
-//                                .height(300.dp),
                         url = "https://www.ssec.wisc.edu/data/us_comp/us_comp_large.mp4",
-//                        url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+//                        url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                         onSetupComplete = {
                             isLoadingMovie = false
                         }
                     )
-                    Button(
-                        onClick = {
-                            is5DayMovieVisible = false
-                            isLoadingMovie = true
+                    Row {
+                        Button(
+                            onClick = {
+                                is5DayMovieVisible = false
+                                isLoadingMovie = true
+                            }
+                        ) {
+                            Text("Hide 5 Day Movie")
                         }
-                    ) {
-                        Text("Hide 5 Day Movie")
+                        Spacer(modifier = Modifier.size(10.dp))
+
+                        Text(
+                            "Note: Please wait while entire movie loads into RAM due to ancient compression algorithm used by SSEC.",
+                            color = Color.White
+                        )
                     }
+
                     if(isLoadingMovie) {
                         Column(
                             modifier = Modifier.fillMaxSize(),
@@ -264,7 +325,8 @@ fun App() {
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier
-                                    .height(100.dp)
+                                    .height(100.dp),
+                                color = Color.Red,
                             )
                         }
                     }
