@@ -1,11 +1,16 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -36,6 +41,7 @@ import coil3.request.crossfade
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.max
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @OptIn(ExperimentalCoilApi::class)
@@ -55,6 +61,7 @@ fun App() {
         var contentWidth by remember { mutableStateOf(0) }
         var contentHeight by remember { mutableStateOf(0) }
         var isLoadingFinished by remember { mutableStateOf(false) }
+        var is5DayMovieVisible by remember { mutableStateOf(false) }
 
         // check orientation
         var isLandscape by remember(localScreenWidth, localScreenHeight) {
@@ -111,9 +118,9 @@ fun App() {
 
             while (true) {
                 if (currentFrame == 0)
-                    delay(500) //.milliseconds)
+                    delay(500.milliseconds)
                 else
-                    delay(100)  //.milliseconds)
+                    delay(100.milliseconds)
 
                 currentFrame = (currentFrame + 1) % (imageRequests.size - 1)
             }
@@ -133,7 +140,7 @@ fun App() {
             modifier = Modifier.fillMaxSize()
         ) {
             // Setup pan/zoom (not rotation) transformable state
-            @Suppress("UNUSED_ANONYMOUS_PARAMETER")
+            @Suppress("UNUSED_ANONYMOUS_PARAMETER") // for rotationChange
             val state =
                 rememberTransformableState { zoomChange, panChange, rotationChange ->
                     scale = (scale * zoomChange).coerceIn(1f, kMaxZoomInFactor)
@@ -186,13 +193,23 @@ fun App() {
                 )
             }
 
-            Column {
+            Column(
+                Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Button(
                     onClick = {
                         showLog = !showLog
                     }
                 ) {
                     Text("Show Log")
+                }
+                Button(
+                    onClick = {
+                        is5DayMovieVisible = true
+                    }
+                ) {
+                    Text("Show 5 Day Movie")
                 }
 
                 if (showLog) {
@@ -214,6 +231,46 @@ fun App() {
                     color = Color.White
                 )
             }
+
+            var isLoadingMovie by remember { mutableStateOf(true) }
+            if (is5DayMovieVisible) {
+                Box(
+                    Modifier.fillMaxSize(),
+//                        contentAlignment = Alignment.Center
+                ) {
+                    VideoPlayer(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+//                                .height(300.dp),
+                        url = "https://www.ssec.wisc.edu/data/us_comp/us_comp_large.mp4",
+//                        url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                        onSetupComplete = {
+                            isLoadingMovie = false
+                        }
+                    )
+                    Button(
+                        onClick = {
+                            is5DayMovieVisible = false
+                            isLoadingMovie = true
+                        }
+                    ) {
+                        Text("Hide 5 Day Movie")
+                    }
+                    if(isLoadingMovie) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .height(100.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

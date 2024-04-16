@@ -1,5 +1,9 @@
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -23,3 +27,14 @@ actual fun getScreenHeight(): Dp = LocalWindowInfo.current
     .containerSize
     .height
     .dp
+
+@Composable
+actual fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> Unit) {
+    Column {
+        VideoPlayerImpl(
+            url = url,
+            modifier = Modifier.fillMaxWidth().height(400.dp),
+            onSetupComplete = onSetupComplete
+        )
+    }
+}

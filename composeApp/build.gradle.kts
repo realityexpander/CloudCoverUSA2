@@ -49,11 +49,17 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
+
+            // Video
+            implementation("androidx.media3:media3-exoplayer:1.1.0")
+            implementation("androidx.media3:media3-exoplayer-dash:1.1.0")
+            implementation("androidx.media3:media3-ui:1.1.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.java)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation("uk.co.caprica:vlcj:4.7.0")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -93,6 +99,9 @@ android {
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
+}
+dependencies {
+    implementation(libs.androidx.media3.session)
 }
 
 compose.desktop {
