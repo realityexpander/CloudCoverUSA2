@@ -48,7 +48,12 @@ actual fun getScreenHeight(): Dp = LocalWindowInfo.current
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> Unit) {
+actual fun VideoPlayer(
+    modifier: Modifier,
+    url: String,
+    onSetupComplete: () -> Unit,
+    onCloseVideoWindow: () -> Unit
+) {
     val player = remember { AVPlayer(uRL = NSURL.URLWithString(url)!!) }
     val playerLayer = remember { AVPlayerLayer() }
     val avPlayerViewController = remember { AVPlayerViewController() }

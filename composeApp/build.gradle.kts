@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -59,7 +60,8 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.java)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation("uk.co.caprica:vlcj:4.7.0")
+//            implementation("uk.co.caprica:vlcj:4.7.0")
+            implementation("uk.co.caprica:vlcj:4.8.2")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

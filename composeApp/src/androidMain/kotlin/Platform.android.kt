@@ -40,7 +40,12 @@ actual fun getScreenHeight() = LocalConfiguration.current
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-actual fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> Unit) {
+actual fun VideoPlayer(
+    modifier: Modifier,
+    url: String,
+    onSetupComplete: () -> Unit,
+    onCloseVideoWindow: () -> Unit
+) {
 
     AndroidView(
         modifier = modifier,

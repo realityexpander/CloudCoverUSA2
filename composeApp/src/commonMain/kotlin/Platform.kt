@@ -3,7 +3,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 
 interface Platform {
-    val name: String
+	val name: String
 }
 
 expect fun getPlatform(): Platform
@@ -15,4 +15,9 @@ expect fun getScreenWidth(): Dp
 expect fun getScreenHeight(): Dp
 
 @Composable
-expect fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> Unit)
+expect fun VideoPlayer(
+	modifier: Modifier,
+	url: String,
+	onSetupComplete: () -> Unit = {},
+	onCloseVideoWindow: () -> Unit = {}
+)

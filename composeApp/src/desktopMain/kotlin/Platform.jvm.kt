@@ -1,15 +1,18 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
-class JVMPlatform: Platform {
-    override val name: String = "Java ${System.getProperty("java.version")}"
+class JVMPlatform : Platform {
+	override val name: String = "Java ${System.getProperty("java.version")}"
 }
 
 actual fun getPlatform(): Platform = JVMPlatform()
@@ -17,24 +20,76 @@ actual fun getPlatform(): Platform = JVMPlatform()
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun getScreenWidth(): Dp = LocalWindowInfo.current
-    .containerSize
-    .width
-    .dp
+	.containerSize
+	.width
+	.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun getScreenHeight(): Dp = LocalWindowInfo.current
-    .containerSize
-    .height
-    .dp
+	.containerSize
+	.height
+	.dp
 
 @Composable
-actual fun VideoPlayer(modifier: Modifier, url: String, onSetupComplete: () -> Unit) {
-    Column {
-        VideoPlayerImpl(
-            url = url,
-            modifier = Modifier.fillMaxWidth().height(400.dp),
-            onSetupComplete = onSetupComplete
-        )
-    }
+actual fun VideoPlayer(
+	modifier: Modifier,
+	url: String,
+	onSetupComplete: () -> Unit,
+	onCloseVideoWindow: () -> Unit
+) {
+	var isProgressVisible by remember { mutableStateOf(true) }
+	var isVideoPlayerVisible by remember { mutableStateOf(false) }
+	var isVideoPlayerPaused by remember { mutableStateOf(false) }
+
+	LaunchedEffect(Unit) {
+		delay(250)
+		isVideoPlayerVisible = true
+	}
+
+	Column(
+		modifier = modifier
+			.fillMaxWidth()
+			.background(color = androidx.compose.ui.graphics.Color.Black),
+		horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+	) {
+//			Button(
+//				onClick = {
+//					onCloseVideoWindow()
+//				}
+//			) {
+//				Text("Close video")
+//			}
+
+		if (isProgressVisible) {
+			Spacer(modifier = Modifier.size(50.dp))
+			CircularProgressIndicator(
+				modifier = Modifier
+					.size(50.dp)
+			)
+		} else {
+			Spacer(modifier = Modifier.size(50.dp))
+			Button(
+				onClick = {
+					isVideoPlayerPaused = !isVideoPlayerPaused
+				}
+			) {
+				Text("Play/Pause video")
+			}
+		}
+
+		if (isVideoPlayerVisible) {
+			VideoPlayerImpl(
+				url = url,
+				modifier = modifier,
+				onSetupComplete = onSetupComplete,
+				onHideProgress = {
+					isProgressVisible = false
+				},
+				isVideoPlayerPaused = isVideoPlayerPaused
+			)
+		}
+	}
+
+//	}
 }

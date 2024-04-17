@@ -51,7 +51,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
-
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 @Preview
@@ -281,10 +280,15 @@ fun App() {
                     )
                 }
 
+                // Show image loading progress
                 if (finishedCount < 8) {
                     LinearProgressIndicator(
                         progress = finishedCount / 7f,
                         modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        "Loading current satellite frames...",
+                        color = Color.White
                     )
                 }
             }
@@ -296,13 +300,14 @@ fun App() {
                 ) {
                     VideoPlayer(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxSize(),
                         url = "https://www.ssec.wisc.edu/data/us_comp/us_comp_large.mp4",
 //                        url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                         onSetupComplete = {
                             isLoadingMovie = false
                         }
                     )
+
                     Row(
                         Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -323,6 +328,7 @@ fun App() {
                         )
                     }
 
+                    // Progress indicator
                     if(isLoadingMovie) {
                         Column(
                             modifier = Modifier.fillMaxSize(),
