@@ -120,6 +120,7 @@ compose.desktop {
             macOS {
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
+                iconFile.set(project.file("icon.icns"))
             }
         }
     }
