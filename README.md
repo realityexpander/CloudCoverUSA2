@@ -25,36 +25,36 @@ To run desktop:
 
 
 ## Last commint built with:
-Android Studio Koala | 2023.3.2 Canary 2
-Build #AI-233.14475.28.2332.11606850, built on March 21, 2024
-Runtime version: 17.0.10+0-17.0.10b1087.21-11572160 aarch64
-VM: OpenJDK 64-Bit Server VM by JetBrains s.r.o.
-macOS 14.4.1
-GC: G1 Young Generation, G1 Old Generation
-Memory: 4096M
-Cores: 10
-Metal Rendering is ON
-Registry:
-ide.tooltip.initialDelay=812
-ide.browser.jcef.gpu.disable=true
-debugger.new.tool.window.layout=true
-analyze.exceptions.on.the.fly=true
-ide.experimental.ui=true
-Non-Bundled Plugins:
-com.c5inco.modifiers (1.0.15)
-wu.seal.tool.jsontokotlin (3.7.4)
-com.wakatime.intellij.plugin (14.3.13)
-com.github.airsaid.androidlocalize (3.0.0)
-DBN (3.4.3211.0)
-net.seesharpsoft.intellij.plugins.csv (3.3.0-233)
-com.jetbrains.kmm (0.8.2(233)-8)
-com.squareup.sqldelight (2.0.2)
-com.developerphil.adbidea (1.6.15)
-org.jetbrains.compose.desktop.ide (1.6.1)
-by.overpass.svg-to-compose-intellij (0.14)
-com.github.copilot (1.5.2.5345)
-mobi.hsz.idea.gitignore (4.5.3)
-com.abeade.plugin.figma.import (1.0.8)
+* Android Studio Koala | 2023.3.2 Canary 2
+* Build #AI-233.14475.28.2332.11606850, built on March 21, 2024
+* Runtime version: 17.0.10+0-17.0.10b1087.21-11572160 aarch64
+* VM: OpenJDK 64-Bit Server VM by JetBrains s.r.o.
+* macOS 14.4.1
+* GC: G1 Young Generation, G1 Old Generation
+* Memory: 4096M
+* Cores: 10
+* Metal Rendering is ON
+* Registry:
+* ide.tooltip.initialDelay=812
+* ide.browser.jcef.gpu.disable=true
+* debugger.new.tool.window.layout=true
+* analyze.exceptions.on.the.fly=true
+* ide.experimental.ui=true
+* Non-Bundled Plugins:
+* com.c5inco.modifiers (1.0.15)
+* wu.seal.tool.jsontokotlin (3.7.4)
+* com.wakatime.intellij.plugin (14.3.13)
+* com.github.airsaid.androidlocalize (3.0.0)
+* DBN (3.4.3211.0)
+* net.seesharpsoft.intellij.plugins.csv (3.3.0-233)
+* com.jetbrains.kmm (0.8.2(233)-8)
+* com.squareup.sqldelight (2.0.2)
+* com.developerphil.adbidea (1.6.15)
+* org.jetbrains.compose.desktop.ide (1.6.1)
+* by.overpass.svg-to-compose-intellij (0.14)
+* com.github.copilot (1.5.2.5345)
+* mobi.hsz.idea.gitignore (4.5.3)
+* com.abeade.plugin.figma.import (1.0.8)
 
 
 ## Original Instructions
