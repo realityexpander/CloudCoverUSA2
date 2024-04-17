@@ -24,7 +24,30 @@ To run desktop:
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/7dbdd5d5-b459-4d3e-97d9-ba6a4fdf1249">
 
 
-## Last commint built with:
+## Create Icons for MacOS
+- Make a 1024x1024 PNG image, call it `Icon1024.png`
+- make a folder `newIcon`
+- copy the PNG image to the folder,
+- run the following command from inside the folder:
+```bash
+mkdir MyIcon.iconset
+sips -z 16 16     Icon1024.png --out MyIcon.iconset/icon_16x16.png
+sips -z 32 32     Icon1024.png --out MyIcon.iconset/icon_16x16@2x.png
+sips -z 32 32     Icon1024.png --out MyIcon.iconset/icon_32x32.png
+sips -z 64 64     Icon1024.png --out MyIcon.iconset/icon_32x32@2x.png
+sips -z 128 128   Icon1024.png --out MyIcon.iconset/icon_128x128.png
+sips -z 256 256   Icon1024.png --out MyIcon.iconset/icon_128x128@2x.png
+sips -z 256 256   Icon1024.png --out MyIcon.iconset/icon_256x256.png
+sips -z 512 512   Icon1024.png --out MyIcon.iconset/icon_256x256@2x.png
+sips -z 512 512   Icon1024.png --out MyIcon.iconset/icon_512x512.png
+cp Icon1024.png MyIcon.iconset/icon_512x512@2x.png
+iconutil -c icns MyIcon.iconset
+rm -R MyIcon.iconset
+```
+- Copy the `icon.icns` file to the `composeApp` folder.
+- Copy the `Icon1024.png` to the `composeApp/src/commonMain/composeResources/drawable` folder.
+
+## Last commit built with:
 * Android Studio Koala | 2023.3.2 Canary 2
 * Build #AI-233.14475.28.2332.11606850, built on March 21, 2024
 * Runtime version: 17.0.10+0-17.0.10b1087.21-11572160 aarch64
@@ -55,6 +78,8 @@ To run desktop:
 * com.github.copilot (1.5.2.5345)
 * mobi.hsz.idea.gitignore (4.5.3)
 * com.abeade.plugin.figma.import (1.0.8)
+
+
 
 
 ## Original Instructions

@@ -86,9 +86,6 @@ fun VideoPlayerImpl(
 		factory = factory,
 		background = Color.Transparent,
 		modifier = modifier,
-		update = {
-			//onSetupComplete()
-		}
 	)
 }
 
