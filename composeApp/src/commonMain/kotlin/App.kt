@@ -243,7 +243,7 @@ fun App() {
                         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
                     ) {
                         Text(
-                            "5 Day Movie",
+                            "7 Day Movie",
                             color = Color.White.copy(alpha = 0.5f)
                         )
                     }
@@ -356,7 +356,7 @@ fun App() {
                                 isLoadingMovie = true
                             }
                         ) {
-                            Text("Hide 5 Day Movie")
+                            Text("Hide 7 Day Movie")
                         }
                         Spacer(modifier = Modifier.size(10.dp))
 
