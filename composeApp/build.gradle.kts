@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.androidx.media3.session)
 }
 
+// Setup for distribution: https://github.com/JetBrains/compose-multiplatform/blob/master/tutorials/Signing_and_notarization_on_macOS/README.md#configuring-entitlements
 compose.desktop {
     application {
         mainClass = "MainKt"
