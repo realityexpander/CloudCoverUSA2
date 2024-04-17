@@ -84,7 +84,6 @@ actual fun VideoPlayer(
                         //println("Timed metadata available: $data")
                     }
 
-//                    mp.setVideoScalingMode(2)
                     println("videoWidth: ${mp.videoWidth}, Height: ${mp.videoHeight}")
                     onSetupComplete()
 
