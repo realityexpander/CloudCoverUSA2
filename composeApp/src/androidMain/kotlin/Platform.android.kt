@@ -83,8 +83,6 @@ actual fun VideoPlayer(
                     mp.setOnTimedMetaDataAvailableListener { mp, data ->
                         //println("Timed metadata available: $data")
                     }
-
-                    println("videoWidth: ${mp.videoWidth}, Height: ${mp.videoHeight}")
                     onSetupComplete()
 
                     mp.isLooping = true
