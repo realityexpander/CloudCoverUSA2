@@ -51,6 +51,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
+val platform = getPlatform()
+
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 @Preview
@@ -167,6 +169,7 @@ fun App() {
                     )
                 }
 
+            // Satellite image
             Column(
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -203,6 +206,7 @@ fun App() {
                 )
             }
 
+            // Controls
             Column(
                 Modifier.fillMaxHeight(),
                 horizontalAlignment = Alignment.Start
@@ -245,11 +249,45 @@ fun App() {
                     }
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    Text(
-                        "Drag & Pinch\n" +
-                                "controls map.",
-                        color = Color.White.copy(alpha = 0.5f)
-                    )
+                    // Check if on Desktop
+                    if(platform.name.contains("Java")) {
+                        Button(
+                            onClick = {
+                                scale *= 1.5f
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.5f),
+                            ),
+                            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                        ) {
+                            Text(
+                                "Zoom +",
+                                color = Color.White.copy(alpha = 0.5f)
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+
+                        Button(
+                            onClick = {
+                                scale /= 1.5f
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.5f),
+                            ),
+                            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                        ) {
+                            Text(
+                                "Zoom -",
+                                color = Color.White.copy(alpha = 0.5f)
+                            )
+                        }
+                    } else {
+                        Text(
+                            "Drag & Pinch\n" +
+                                  "controls map.",
+                            color = Color.White.copy(alpha = 0.5f)
+                        )
+                    }
                 }
 
                  if (isDebugModeActive) {

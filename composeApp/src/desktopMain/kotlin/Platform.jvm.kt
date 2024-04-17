@@ -53,14 +53,6 @@ actual fun VideoPlayer(
 			.background(color = androidx.compose.ui.graphics.Color.Black),
 		horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
 	) {
-//			Button(
-//				onClick = {
-//					onCloseVideoWindow()
-//				}
-//			) {
-//				Text("Close video")
-//			}
-
 		if (isProgressVisible) {
 			Spacer(modifier = Modifier.size(50.dp))
 			CircularProgressIndicator(

@@ -60,7 +60,6 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.java)
             implementation(libs.kotlinx.coroutines.swing)
-//            implementation("uk.co.caprica:vlcj:4.7.0")
             implementation("uk.co.caprica:vlcj:4.8.2")
         }
         iosMain.dependencies {
@@ -112,8 +111,15 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.realityexpander.cloudcoverusa2"
+//            packageName = "com.realityexpander.cloudcoverusa2"
+            packageName = "Cloud Cover USA"
             packageVersion = "1.0.0"
+
+            description = "Cloud Cover USA"
+            macOS {
+                dockName = "Cloud Cover USA"
+                bundleID = "com.realityexpander.cloudcoverusa2"
+            }
         }
     }
 }
