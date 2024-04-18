@@ -27,7 +27,6 @@ fun VideoPlayerImpl(
 ) {
 	val mediaPlayerComponent = remember { initializeMediaPlayerComponent() }
 	val mediaPlayer = remember { mediaPlayerComponent.mediaPlayer() }
-	var isProgressVisible by remember { mutableStateOf(true) }
 
 	val factory = remember { { mediaPlayerComponent } }
 	/* OR the following code and using SwingPanel(factory = { factory }, ...) */
