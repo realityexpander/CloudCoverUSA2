@@ -132,8 +132,10 @@ compose.desktop {
                 }
 
                 signing {
+                    val props: Properties = Properties()
+                    props.load(project.file("./../local.properties").inputStream())
                     sign.set(true)
-                    identity.set("Christopher Day Athanas")
+                    identity.set(props.getProperty("SIGNING_IDENTITY"))
                 }
 
                 notarization {
