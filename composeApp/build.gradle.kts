@@ -1,6 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.extraProperties
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -125,6 +125,7 @@ compose.desktop {
                 packageBuildVersion = "1"
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
+
                 iconFile.set(project.file("icon.icns"))
                 infoPlist {
                      extraProperties.properties["NSCameraUsageDescription"] = "This app requires access to the camera to scan QR codes."
@@ -134,26 +135,19 @@ compose.desktop {
                     sign.set(true)
                     identity.set("Christopher Day Athanas")
                 }
+
+                notarization {
+                    // open local.properties
+                    val props: Properties = Properties()
+                    props.load(project.file("./../local.properties").inputStream())
+                    appleID.set(props.getProperty("NOTARIZATION_APPLE_ID"))
+                    password.set(props.getProperty("NOTARIZATION_PASSWORD"))
+                    teamID.set(props.getProperty("NOTARIZATION_TEAM_ID"))
+                }
             }
         }
     }
 }
-
-val macExtraPlistKeys: String
-    get() = """
-      <key>CFBundleURLTypes</key>
-      <array>
-        <dict>
-          <key>CFBundleURLName</key>
-          <string>Example deep link</string>
-          <key>CFBundleURLSchemes</key>
-          <array>
-            <string>compose</string>
-          </array>
-        </dict>
-      </array>
-    """
-
 
 
 

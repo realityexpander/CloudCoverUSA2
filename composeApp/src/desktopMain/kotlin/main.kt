@@ -22,24 +22,23 @@ fun main() = application {
 		icon = icon
 	) {
 		MenuBar {
-			Menu("File") {
-				Item("New") {
-					println("New file")
-				}
-				Item("Open") {
-					println("Open file")
-				}
-				Item("Save") {
-					println("Save file")
-				}
-				Item(
-					"Quit",
-					onClick = ::exitApplication,
-					shortcut = KeyShortcut(Key.Q, meta = true)
-				)
-			}
+			// Menu("File") {
+			// 	Item("New") {
+			// 		println("New file")
+			// 	}
+			// 	Item("Open") {
+			// 		println("Open file")
+			// 	}
+			// 	Item("Save") {
+			// 		println("Save file")
+			// 	}
+			// 	Item(
+			// 		"Quit",
+			// 		onClick = ::exitApplication,
+			// 		shortcut = KeyShortcut(Key.X, meta = true)
+			// 	)
+			// }
 		}
-
 
 		App()
 	}
