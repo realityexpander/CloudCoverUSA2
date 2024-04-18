@@ -1,4 +1,4 @@
-# Cloud View USA 2.0
+# Cloud Cover USA 2
 Shows current cloud cover for North America, Mexico and Canada
 
 - KMP Application for iOS, Android and Desktop
