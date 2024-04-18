@@ -53,9 +53,6 @@ kotlin {
             implementation(libs.ktor.client.android)
 
             // Video
-//            implementation("androidx.media3:media3-exoplayer:1.1.0")
-//            implementation("androidx.media3:media3-exoplayer-dash:1.1.0")
-//            implementation("androidx.media3:media3-ui:1.1.0")
             implementation(libs.androidx.media3.exoplayer)
             implementation(libs.androidx.media3.exoplayer.dash)
             implementation(libs.androidx.media3.ui)
