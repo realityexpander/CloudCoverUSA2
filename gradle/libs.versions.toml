@@ -10,17 +10,22 @@ androidx-core-ktx = "1.12.0"
 androidx-espresso-core = "3.5.1"
 androidx-material = "1.11.0"
 androidx-test-junit = "1.1.5"
-compose = "1.6.5"
-compose-plugin = "1.6.1"
+compose = "1.6.6"
+#compose-plugin = "1.6.1"
+compose-plugin = "1.6.10-dev1584"
 junit = "4.13.2"
 kotlin = "1.9.23"
 kotlinx-coroutines-swing = "1.8.0"
 #ktor = "3.0.0-beta-1"
 ktor = "2.3.10"
 coilCompose = "3.0.0-alpha06"
-media3Session = "1.3.1"
+media3 = "1.3.1"
+vlcj = "4.8.2"
 
 [libraries]
+androidx-media3-exoplayer = { group = "androidx.media3", name="media3-exoplayer", version.ref = "media3" }
+androidx-media3-exoplayer-dash = { group = "androidx.media3", name="media3-exoplayer-dash", version.ref = "media3" }
+androidx-media3-ui = { group = "androidx.media3", name="media3-ui", version.ref = "media3" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -43,7 +48,8 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
-androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3Session" }
+androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+vlcj = { group = "uk.co.caprica", name="vlcj", version.ref = "vlcj" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

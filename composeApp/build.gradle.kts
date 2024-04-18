@@ -22,7 +22,7 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -53,15 +53,20 @@ kotlin {
             implementation(libs.ktor.client.android)
 
             // Video
-            implementation("androidx.media3:media3-exoplayer:1.1.0")
-            implementation("androidx.media3:media3-exoplayer-dash:1.1.0")
-            implementation("androidx.media3:media3-ui:1.1.0")
+//            implementation("androidx.media3:media3-exoplayer:1.1.0")
+//            implementation("androidx.media3:media3-exoplayer-dash:1.1.0")
+//            implementation("androidx.media3:media3-ui:1.1.0")
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.exoplayer.dash)
+            implementation(libs.androidx.media3.ui)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+//            implementation(compose.desktop.macos_arm64)
+            implementation(compose.desktop.common)
             implementation(libs.ktor.client.java)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation("uk.co.caprica:vlcj:4.8.2")
+            implementation(libs.vlcj)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -110,25 +115,36 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "MainKt"
+        // Built with JDK's Corretto 18.0.2 & Corretto 20.0.1
+//        javaHome = System.getProperty("java.home")
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Pkg)
+            modules("java.instrument", "jdk.unsupported")
+
 //            packageName = "com.realityexpander.cloudcoverusa2"
             packageName = "Cloud Cover USA 2"
             description = "Cloud Cover USA 2"
             packageVersion = "1.0.0"
-            copyright = "© 2014-2024 Chris. All rights reserved."
+            copyright = "© 2014-2024 Chris Athanas. All rights reserved."
+            vendor = "Chris Athanas"
 
             includeAllModules = true
 
             macOS {
-                packageBuildVersion = "1"
+                packageBuildVersion = "10"
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
+                appStore = true
+                appCategory = "public.app-category.weather"
+                minimumSystemVersion = "12.0"
 
                 iconFile.set(project.file("icon.icns"))
                 infoPlist {
-                     extraProperties.properties["NSCameraUsageDescription"] = "This app requires access to the camera to scan QR codes."
+                    extraKeysRawXml = """
+                        <key>ITSAppUsesNonExemptEncryption</key>
+                        <false/>
+                    """.trimIndent()
                 }
 
                 signing {
@@ -139,13 +155,20 @@ compose.desktop {
                 }
 
                 notarization {
-                    // open local.properties
                     val props: Properties = Properties()
                     props.load(project.file("./../local.properties").inputStream())
                     appleID.set(props.getProperty("NOTARIZATION_APPLE_ID"))
                     password.set(props.getProperty("NOTARIZATION_PASSWORD"))
                     teamID.set(props.getProperty("NOTARIZATION_TEAM_ID"))
                 }
+
+                // Add libraries to the runtime
+                includeAllModules = true
+
+                provisioningProfile.set(project.file("embedded.provisionprofile"))
+                runtimeProvisioningProfile.set(project.file("runtime.provisionprofile"))
+                entitlementsFile.set(project.file("entitlements.plist"))
+                runtimeEntitlementsFile.set(project.file("runtime-entitlements.plist"))
             }
         }
     }
