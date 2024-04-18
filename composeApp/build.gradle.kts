@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import org.jetbrains.kotlin.gradle.plugin.extraProperties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -113,15 +114,61 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
 //            packageName = "com.realityexpander.cloudcoverusa2"
-            packageName = "Cloud Cover USA"
+            packageName = "Cloud Cover USA 2"
+            description = "Cloud Cover USA 2"
             packageVersion = "1.0.0"
+            copyright = "© 2014-2024 Chris. All rights reserved."
 
-            description = "Cloud Cover USA"
+            includeAllModules = true
+
             macOS {
+                packageBuildVersion = "1"
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 iconFile.set(project.file("icon.icns"))
+                infoPlist {
+                     extraProperties.properties["NSCameraUsageDescription"] = "This app requires access to the camera to scan QR codes."
+                }
+
+                signing {
+                    sign.set(true)
+                    identity.set("Christopher Day Athanas")
+                }
             }
         }
     }
 }
+
+val macExtraPlistKeys: String
+    get() = """
+      <key>CFBundleURLTypes</key>
+      <array>
+        <dict>
+          <key>CFBundleURLName</key>
+          <string>Example deep link</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>compose</string>
+          </array>
+        </dict>
+      </array>
+    """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
