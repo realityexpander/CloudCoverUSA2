@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.plugin.extraProperties
-import java.util.Properties
+import java.util.*
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -13,12 +12,13 @@ kotlin {
         compilations.all {
             kotlinOptions {
                 jvmTarget = "11"
+//                jvmTarget = "17"
             }
         }
     }
     
     jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -46,6 +46,15 @@ kotlin {
             implementation(libs.ktor.serialization)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+
+            implementation(libs.slf4j.nop)
+
+            // for vlcj
+//            implementation(libs.kotlinx.coroutines.core)
+
+            // for webview
+            api("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
+
         }
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -59,11 +68,12 @@ kotlin {
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-//            implementation(compose.desktop.macos_arm64)
             implementation(compose.desktop.common)
             implementation(libs.ktor.client.java)
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.vlcj)
+
+            // for vlcj
+//            implementation(libs.kotlinx.coroutines.swing)
+//            implementation(libs.vlcj)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -99,10 +109,15 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+//        sourceCompatibility = JavaVersion.VERSION_17
+//        targetCompatibility = JavaVersion.VERSION_17
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
+//    kotlin {
+//        jvmToolchain(17)
+//    }
 }
 dependencies {
     implementation(libs.androidx.media3.session)
@@ -116,10 +131,9 @@ compose.desktop {
 //        javaHome = System.getProperty("java.home")
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Pkg)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Pkg) // TargetFormat.Msi, TargetFormat.Deb,
             modules("java.instrument", "jdk.unsupported")
 
-//            packageName = "com.realityexpander.cloudcoverusa2"
             packageName = "Cloud Cover USA 2"
             description = "Cloud Cover USA 2"
             packageVersion = "1.0.0"
@@ -129,7 +143,7 @@ compose.desktop {
             includeAllModules = true
 
             macOS {
-                packageBuildVersion = "10"
+                packageBuildVersion = "19"
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appStore = true
@@ -147,8 +161,8 @@ compose.desktop {
                 signing {
                     val props: Properties = Properties()
                     props.load(project.file("./../local.properties").inputStream())
-                    sign.set(true)
                     identity.set(props.getProperty("SIGNING_IDENTITY"))
+                    sign.set(true)
                 }
 
                 notarization {
@@ -159,32 +173,26 @@ compose.desktop {
                     teamID.set(props.getProperty("NOTARIZATION_TEAM_ID"))
                 }
 
-                // Add libraries to the runtime
-                includeAllModules = true
-
                 provisioningProfile.set(project.file("embedded.provisionprofile"))
                 runtimeProvisioningProfile.set(project.file("runtime.provisionprofile"))
                 entitlementsFile.set(project.file("entitlements.plist"))
                 runtimeEntitlementsFile.set(project.file("runtime-entitlements.plist"))
             }
         }
+
+        buildTypes.release.proguard {
+            configurationFiles.from(file("proguard/proguard-rules.pro"))
+            //optimize.set(false)
+            obfuscate.set(false)
+        }
+
+        // For Webview
+        jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
+        jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED")
+        if (System.getProperty("os.name").contains("Mac")) {
+            jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
+            jvmArgs("--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED")
+            jvmArgs("--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

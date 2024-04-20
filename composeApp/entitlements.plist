@@ -21,5 +21,9 @@
     <key>com.apple.developer.team-identifier</key>
     <string>8M6DWG8MX5</string>
     <!-- Add additional entitlements here, for example for network or hardware access. -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <key>com.apple.security.network.server</key>
+    <true/>
 </dict>
 </plist>
