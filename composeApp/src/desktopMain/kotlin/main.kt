@@ -16,7 +16,7 @@ import java.io.File
 import kotlin.math.max
 
 // Choose the video player implementation
-val implementation: VideoPlayerImplementation = VideoPlayerImplementation.VLCJ
+val implementation: VideoPlayerImplementation = VideoPlayerImplementation.JCEFWebView
 sealed class VideoPlayerImplementation {
 	data object VLCJ : VideoPlayerImplementation()
 	data object JCEFWebView : VideoPlayerImplementation()
@@ -75,7 +75,7 @@ fun main() = application {
 				LaunchedEffect(Unit) {
 					withContext(Dispatchers.IO) {
 						KCEF.init(builder = {
-							installDir(File("kcef-bundle"))
+							installDir(File("Downloads/kcef-bundle"))
 							progress {
 								onDownloading {
 									downloading = max(it, 0F)
@@ -85,7 +85,7 @@ fun main() = application {
 								}
 							}
 							settings {
-								cachePath = File("cache").absolutePath
+								cachePath = File("Downloads/cache").absolutePath
 							}
 						}, onError = {
 							it?.printStackTrace()

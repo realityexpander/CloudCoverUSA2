@@ -49,8 +49,8 @@ kotlin {
 
             implementation(libs.slf4j.nop)
 
-            // for vlcj
-//            implementation(libs.kotlinx.coroutines.core)
+            // for vlcj - necessary?
+            implementation(libs.kotlinx.coroutines.core)
 
             // for webview
             api("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
@@ -143,7 +143,7 @@ compose.desktop {
             includeAllModules = true
 
             macOS {
-                packageBuildVersion = "19"
+                packageBuildVersion = "21"
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appStore = true
@@ -155,6 +155,14 @@ compose.desktop {
                     extraKeysRawXml = """
                         <key>ITSAppUsesNonExemptEncryption</key>
                         <false/>
+                        <key>NSAppDataUsageDescription</key>
+                        <string>Cloud Cover USA 2 requires access to the internet to download weather data.</string>
+                        <key>com.apple.security.files.user-selected.read-write</key>
+                        <true/>
+                        <key>com.apple.security.files.downloads.read-write</key>
+                        <true/>
+                        <key>com.apple.security.network.client</key>
+                        <true/>
                     """.trimIndent()
                 }
 
@@ -182,7 +190,7 @@ compose.desktop {
 
         buildTypes.release.proguard {
             configurationFiles.from(file("proguard/proguard-rules.pro"))
-            //optimize.set(false)
+            optimize.set(false)
             obfuscate.set(false)
         }
 
