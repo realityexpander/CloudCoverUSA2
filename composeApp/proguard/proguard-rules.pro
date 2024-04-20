@@ -13,6 +13,11 @@
 -keep class org.cef.** { *; }
 -keep class kotlinx.coroutines.swing.SwingDispatcherFactory
 
+## Coil
+-keep class coil3.network.ktor.internal.*
+## Ktor
+-keep class io.ktor.client.**
+
 #-dontwarn org.cef.**
 #-dontwarn jogamp.**
 #-dontwarn com.jogamp.**

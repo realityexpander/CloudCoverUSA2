@@ -52,6 +52,7 @@ import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
 val platform = getPlatform()
+const val isDebugModeActive = true
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -72,7 +73,6 @@ fun App() {
         var isLoadingFinished by remember { mutableStateOf(false) }
         var is5DayMovieVisible by remember { mutableStateOf(false) }
         var isShowAboutInfo by remember { mutableStateOf(false) }
-        val isDebugModeActive = false
 
         // check orientation
         var isLandscape by remember(localScreenWidth, localScreenHeight) {
@@ -290,7 +290,7 @@ fun App() {
                     }
                 }
 
-                 if (isDebugModeActive) {
+                if (isDebugModeActive) {
                     Button(
                         onClick = {
                             showLog = !showLog

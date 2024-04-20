@@ -70,6 +70,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(compose.desktop.common)
             implementation(libs.ktor.client.java)
+            implementation(libs.coil.network.ktor)
 
             // for vlcj
             implementation(libs.kotlinx.coroutines.swing)
