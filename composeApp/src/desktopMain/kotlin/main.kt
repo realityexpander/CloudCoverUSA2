@@ -79,7 +79,7 @@ fun main() = application {
 					installDir(File("kcef-bundle"))
 					progress {
 						onDownloading {
-							downloading = max(it, 0)
+							downloading = max(it, 0F)
 						}
 						onInitialized {
 							initialized = true
