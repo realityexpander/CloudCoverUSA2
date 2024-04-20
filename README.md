@@ -47,6 +47,11 @@ rm -R icon.iconset
 - Copy the `icon.icns` file to the `composeApp` folder.
 - Copy the `Icon1024.png` to the `composeApp/src/commonMain/composeResources/drawable` folder.
 
+## TestFlight
+- Upload using Transporter app
+- https://appstoreconnect.apple.com/apps/6498872435/testflight/macos
+- Download using TestFlight app
+
 ## Last commit built with:
 * Android Studio Koala | 2023.3.2 Canary 2
 * Build #AI-233.14475.28.2332.11606850, built on March 21, 2024
