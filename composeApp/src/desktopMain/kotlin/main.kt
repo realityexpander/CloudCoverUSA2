@@ -70,7 +70,7 @@ fun main() = application {
 	) {
 
 		var restartRequired by remember { mutableStateOf(false) }
-		var downloading by remember { mutableStateOf(0) }
+		var downloading by remember { mutableStateOf(0F) }
 		var initialized by remember { mutableStateOf(false) }
 
 		LaunchedEffect(Unit) {
@@ -79,7 +79,7 @@ fun main() = application {
 					installDir(File("kcef-bundle"))
 					progress {
 						onDownloading {
-							downloading = max(it, 0).toInt()
+							downloading = max(it, 0)
 						}
 						onInitialized {
 							initialized = true
@@ -111,7 +111,7 @@ fun main() = application {
 					horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
 				) {
 					Text(
-						text = "Loading $downloading%",
+						text = "Loading ${downloading.toInt()}%",
 						color = Color.White
 					)
 				}
