@@ -71,17 +71,27 @@ actual fun VideoPlayer(
 		}
 
 		if (isVideoPlayerVisible) {
-			VideoPlayerImpl(
-				url = url,
-				modifier = modifier,
-				onSetupComplete = onSetupComplete,
-				onHideProgress = {
-					isProgressVisible = false
-				},
-				isVideoPlayerPaused = isVideoPlayerPaused
-			)
+			if(implementation == VideoPlayerImplementation.JCEFWebView) {
+				VideoPlayerWebViewImpl(
+					url = url,
+					modifier = modifier,
+					onSetupComplete = onSetupComplete,
+					onHideProgress = {
+						isProgressVisible = false
+					},
+					isVideoPlayerPaused = isVideoPlayerPaused
+				)
+			} else {
+				VideoPlayerVLCJImpl(
+					url = url,
+					modifier = modifier,
+					onSetupComplete = onSetupComplete,
+					onHideProgress = {
+						isProgressVisible = false
+					},
+					isVideoPlayerPaused = isVideoPlayerPaused)
+			}
+
 		}
 	}
-
-//	}
 }

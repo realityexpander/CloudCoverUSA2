@@ -72,8 +72,8 @@ kotlin {
             implementation(libs.ktor.client.java)
 
             // for vlcj
-//            implementation(libs.kotlinx.coroutines.swing)
-//            implementation(libs.vlcj)
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.vlcj)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
