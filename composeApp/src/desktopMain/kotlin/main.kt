@@ -70,7 +70,7 @@ fun main() = application {
 	) {
 
 		var restartRequired by remember { mutableStateOf(false) }
-		var downloading by remember { mutableStateOf(0F) }
+		var downloading by remember { mutableStateOf(0) }
 		var initialized by remember { mutableStateOf(false) }
 
 		LaunchedEffect(Unit) {
@@ -79,7 +79,7 @@ fun main() = application {
 					installDir(File("kcef-bundle"))
 					progress {
 						onDownloading {
-							downloading = max(it, 0F)
+							downloading = max(it, 0).toInt()
 						}
 						onInitialized {
 							initialized = true
