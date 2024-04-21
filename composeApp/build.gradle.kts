@@ -169,6 +169,7 @@ compose.desktop {
                     """.trimIndent()
                 }
 
+                // appStore = true
                 signing {
                     val props: Properties = Properties()
                     props.load(project.file("./../local.properties").inputStream())
@@ -176,6 +177,7 @@ compose.desktop {
                     sign.set(true)
                 }
 
+                // appStore = false
                 notarization {
                     val props: Properties = Properties()
                     props.load(project.file("./../local.properties").inputStream())
