@@ -18,7 +18,8 @@ fun VideoPlayerWebViewImpl(
 ) {
 //	val webViewState = rememberWebViewState("https://www.ssec.wisc.edu/data/us_comp/movie")
 //	val webViewState = rememberWebViewState("https://www.youtube.com/watch?v=Vh9eQ_8_9Hw")
-	val webViewState = rememberWebViewState("https://realityexpander.github.io/CloudCoverUSA2/ssec.html")
+//	val webViewState = rememberWebViewState("https://realityexpander.github.io/CloudCoverUSA2/ssec.html")
+	val webViewState = rememberWebViewState(url)
 	Column(Modifier.fillMaxSize()) {
 		val text = webViewState.let {
 			"${it.pageTitle ?: ""} ${it.loadingState} ${it.lastLoadedUrl ?: ""}"

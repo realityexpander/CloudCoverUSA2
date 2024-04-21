@@ -73,7 +73,7 @@ actual fun VideoPlayer(
 		if (isVideoPlayerVisible) {
 			if(implementation == VideoPlayerImplementation.JCEFWebView) {
 				VideoPlayerWebViewImpl(
-					url = url,
+					url = "https://realityexpander.github.io/CloudCoverUSA2/ssec.html",
 					modifier = modifier,
 					onSetupComplete = onSetupComplete,
 					onHideProgress = {
@@ -89,7 +89,8 @@ actual fun VideoPlayer(
 					onHideProgress = {
 						isProgressVisible = false
 					},
-					isVideoPlayerPaused = isVideoPlayerPaused)
+					isVideoPlayerPaused = isVideoPlayerPaused
+				)
 			}
 
 		}

@@ -75,7 +75,7 @@ fun main() = application {
 				LaunchedEffect(Unit) {
 					withContext(Dispatchers.IO) {
 						KCEF.init(builder = {
-							installDir(File("Downloads/kcef-bundle"))
+							installDir(File("kcef-bundle"))
 							progress {
 								onDownloading {
 									downloading = max(it, 0F)
@@ -85,7 +85,7 @@ fun main() = application {
 								}
 							}
 							settings {
-								cachePath = File("Downloads/cache").absolutePath
+								cachePath = File("cache").absolutePath
 							}
 						}, onError = {
 							it?.printStackTrace()

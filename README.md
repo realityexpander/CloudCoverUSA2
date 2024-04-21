@@ -23,7 +23,6 @@ To run desktop:
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/92b9d692-cfaf-4f3f-950d-7bb130afd457">
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/7dbdd5d5-b459-4d3e-97d9-ba6a4fdf1249">
 
-
 ## Create Icons for MacOS
 - make a folder `iconMaker` in the root of the project
 - Make a 1024x1024 PNG image, call it `Icon1024.png`
@@ -46,6 +45,26 @@ rm -R icon.iconset
 ```
 - Copy the `icon.icns` file to the `composeApp` folder.
 - Copy the `Icon1024.png` to the `composeApp/src/commonMain/composeResources/drawable` folder.
+
+## Check notarization status
+```bash
+# Check the app
+spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/app/Cloud Cover USA 2.app' -v
+```
+```bash
+# Check the dmg
+spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/dmg/Cloud Cover USA 2-1.0.0.dmg' -v
+```
+
+```bash
+# Check the release app
+spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/app/Cloud Cover USA 2.app' -v
+```
+
+```bash
+# Check the release dmg
+spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/dmg/Cloud Cover USA 2-1.0.0.dmg' -v
+```
 
 ## TestFlight
 - Upload using Transporter app

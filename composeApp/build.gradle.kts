@@ -128,7 +128,9 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "MainKt"
-        // Built with JDK's Corretto 18.0.2 & Corretto 20.0.1
+        // Built with JDK Corretto 18.0.2
+        // Built with JDK Corretto 20.0.1
+        // Built with Temurin 20.0.2
 //        javaHome = System.getProperty("java.home")
 
         nativeDistributions {
@@ -144,10 +146,10 @@ compose.desktop {
             includeAllModules = true
 
             macOS {
-                packageBuildVersion = "21"
+                packageBuildVersion = "25"
+                appStore = false // make true for Mac App Store, false for external distrubution
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
-                appStore = true
                 appCategory = "public.app-category.weather"
                 minimumSystemVersion = "12.0"
 
@@ -190,6 +192,8 @@ compose.desktop {
         }
 
         buildTypes.release.proguard {
+            version.set("7.4.2")
+            isEnabled.set(false)
             configurationFiles.from(file("proguard/proguard-rules.pro"))
             optimize.set(false)
             obfuscate.set(false)
