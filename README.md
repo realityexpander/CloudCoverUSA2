@@ -47,6 +47,8 @@ rm -R icon.iconset
 - Copy the `Icon1024.png` to the `composeApp/src/commonMain/composeResources/drawable` folder.
 
 ## Check notarization status
+
+## Check main (not release)
 ```bash
 # Check the app
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/app/Cloud Cover USA 2.app' -v
@@ -55,7 +57,12 @@ spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/app/Cloud Cover
 # Check the dmg
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/dmg/Cloud Cover USA 2-1.0.0.dmg' -v
 ```
+```bash
+# Check the pkg
+spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/pkg/Cloud Cover USA 2-1.0.0.pkg' -v
+```
 
+## Check main-release
 ```bash
 # Check the release app
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/app/Cloud Cover USA 2.app' -v
@@ -64,6 +71,15 @@ spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/app/Clo
 ```bash
 # Check the release dmg
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/dmg/Cloud Cover USA 2-1.0.0.dmg' -v
+```
+
+### Read security cert
+```bash
+security cms -D -i composeApp/build/compose/binaries/main/app/Cloud\ Cover\ USA\ 2.app/Contents/embedded.provisionprofile
+```
+### Dusokay Entitlements
+```bash
+codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/binaries/main/app/Cloud Cover USA 2.app'
 ```
 
 ## TestFlight

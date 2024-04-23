@@ -16,7 +16,7 @@ import java.io.File
 import kotlin.math.max
 
 // Choose the video player implementation
-val implementation: VideoPlayerImplementation = VideoPlayerImplementation.JCEFWebView
+val implementation: VideoPlayerImplementation = VideoPlayerImplementation.VLCJ
 sealed class VideoPlayerImplementation {
 	data object VLCJ : VideoPlayerImplementation()
 	data object JCEFWebView : VideoPlayerImplementation()

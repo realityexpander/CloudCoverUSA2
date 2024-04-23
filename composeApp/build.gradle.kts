@@ -19,6 +19,18 @@ kotlin {
     
     jvm("desktop")
 
+//    js {
+//        moduleName = "app"
+//        binaries.executable()
+//        browser {
+//            useCommonJs()
+//            commonWebpackConfig {
+//                outputFileName = "$moduleName.js"
+//
+//            }
+//        }
+//    }
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -40,6 +52,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.material.icons.extended)
 
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)
@@ -79,6 +92,10 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
+//        jsMain.dependencies {
+//            implementation(libs.ktor.client.js)
+//            implementation(compose.html.core) // Required for Compose Web/Canvas on JS
+//        }
     }
 }
 
@@ -146,8 +163,8 @@ compose.desktop {
             includeAllModules = true
 
             macOS {
-                packageBuildVersion = "25"
-                appStore = false // make true for Mac App Store, false for external distrubution
+                packageBuildVersion = "26"
+                appStore = false // make true for Mac App Store, false for external distribution
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appCategory = "public.app-category.weather"
@@ -169,7 +186,7 @@ compose.desktop {
                     """.trimIndent()
                 }
 
-                // appStore = true
+                // signing requires appStore = true
                 signing {
                     val props: Properties = Properties()
                     props.load(project.file("./../local.properties").inputStream())
@@ -177,7 +194,7 @@ compose.desktop {
                     sign.set(true)
                 }
 
-                // appStore = false
+                // notarizing requires appStore = false
                 notarization {
                     val props: Properties = Properties()
                     props.load(project.file("./../local.properties").inputStream())

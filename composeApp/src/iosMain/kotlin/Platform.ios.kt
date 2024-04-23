@@ -8,17 +8,20 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.useContents
 import platform.AVFoundation.AVPlayer
 import platform.AVFoundation.AVPlayerItem
 import platform.AVFoundation.AVPlayerLayer
 import platform.AVFoundation.AVPlayerLooper
 import platform.AVFoundation.AVQueuePlayer
+import platform.AVFoundation.addPeriodicTimeObserverForInterval
 import platform.AVFoundation.play
 import platform.AVKit.AVPlayerViewController
 import platform.CoreGraphics.CGRect
 import platform.CoreMedia.CMTimeMake
 import platform.CoreMedia.CMTimeRangeMake
 import platform.Foundation.NSURL
+import platform.Foundation.NSUnitDuration.Companion.milliseconds
 import platform.QuartzCore.CATransaction
 import platform.QuartzCore.kCATransactionDisableActions
 import platform.UIKit.UIDevice
@@ -69,6 +72,8 @@ actual fun VideoPlayer(
     avPlayerViewController.player = player2
     avPlayerViewController.showsPlaybackControls = true
 
+    var progressCount = 0
+
     playerLayer.player = player2
     // Use a UIKitView to integrate with your existing UIKit views
     UIKitView(
@@ -92,7 +97,24 @@ actual fun VideoPlayer(
             player.play()
             avPlayerViewController.player!!.play()
 
-            onSetupComplete()
+            // setup delegate to detect when play starts
+            player.addPeriodicTimeObserverForInterval(
+                CMTimeMake(1, 1),
+                queue = null,
+                usingBlock = { time ->
+                    time.useContents {
+                        print("timeScape:  ${timescale.toDouble()}, ")
+                        println("time: ${milliseconds.converter.valueFromBaseUnitValue(timescale.toDouble())}")
+
+                        // Allow progress to be cleared after a few seconds
+                        if(progressCount > 6) {
+                            onSetupComplete()
+                        }
+                        progressCount++
+                    }
+                }
+            )
+
         },
         modifier = modifier
     )
