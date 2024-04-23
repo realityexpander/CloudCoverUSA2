@@ -138,7 +138,7 @@ fun App() {
                 imageRequests.add(
                     ImageRequest.Builder(localContext)
 //                        .data("$rootUrl$finishedCount.jpg") //?" + (0..1_000_000).random())
-                        .data("https://realityexpander.github.io/CloudCoverUSA2/icon.png") //?" + (0..1_000_000).random()) //
+                        .data("https://wsrv.nl/?url=https://realityexpander.github.io/CloudCoverUSA2/icon.png") //?" + (0..1_000_000).random()) //
 //                        .data("$rootUrl$finishedCount.jpg&w=300") //?" + (0..1_000_000).random())
 //                        .data("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300")
 //                        .data("https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e")
