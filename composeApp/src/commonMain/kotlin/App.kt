@@ -45,6 +45,7 @@ import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -52,6 +53,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
@@ -125,31 +128,26 @@ fun App() {
         var offset by remember { mutableStateOf(Offset.Zero) }
         var currentFrame by remember { mutableStateOf(-1) }
 
-
         fun addToLog(msg: String) {
             loadingLog = "$msg\n$loadingLog"
         }
 
-        // Load 1 at a time for ios
+        // Load 1 at a time in sequence due to how Image API works
         LaunchedEffect(finishedCount) {
             if (finishedCount >= numFrames) {
                 isLoadingFinished = true
             } else {
+                val random = (0..1_000_000).random() // allows for cache busting
                 imageRequests.add(
                     ImageRequest.Builder(localContext)
-                        .httpHeaders(
-                            headers = NetworkHeaders.Builder()
-                                .add("Host", "https://realityexpander.github.io/CloudCoverUSA2/")
-                                .build()
-                        )
 //                        .data("$rootUrl$finishedCount.jpg") //?" + (0..1_000_000).random())
-//                        .data("$rootUrl$finishedCount.jpg?" + (0..1_000_000).random())
+                        .data("$rootUrl$finishedCount.jpg?$random")
 //                        .data("https://realityexpander.github.io/CloudCoverUSA2/icon.png") //?" + (0..1_000_000).random()) //
-                        .data("https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image0.jpg")
+//                        .data("https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image0.jpg")
 //                        .data("$rootUrl$finishedCount.jpg&w=300") //?" + (0..1_000_000).random())
 //                        .data("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300")
 //                        .data("https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e")
-//						.crossfade(true) // prevents flicker
+						.crossfade(true) // prevents flicker
                         .listener(
                             onStart = { request ->
                                 // loadingLog =
@@ -181,7 +179,8 @@ fun App() {
                         //.networkCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
 
                         // brief flicker but plays all frames
-                        .diskCacheKey("$rootUrl$finishedCount.jpg?" + (0..1_000_000).random())
+//                        .diskCacheKey("$rootUrl$finishedCount.jpg")
+                        .diskCacheKey("$rootUrl$finishedCount.jpg?$random")
                         //flicker .memoryCacheKey("$rootUrl$finishedCount.jpg?" + (0..1_000_000).random())
                         .httpHeaders(
                             headers = NetworkHeaders.Builder()
@@ -224,6 +223,7 @@ fun App() {
 //            offset = Offset.Zero
 //        }
 
+        // Show the Map Animation Image
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
@@ -342,6 +342,7 @@ fun App() {
             }
         }
 
+        // Loading indicator
         AnimatedVisibility(
             !isLoadingFinished,
             enter = EnterTransition.None,
@@ -469,6 +470,9 @@ fun App() {
                             offset = Offset.Zero
                             isLoadingFinished = false
                             scope.launch {
+                                SingletonImageLoader.get(localContext).diskCache?.clear()
+                                SingletonImageLoader.get(localContext).memoryCache?.clear()
+
                                 imageRequests.clear()
                                 isFirstFrame = true
                                 isInitialized = false
