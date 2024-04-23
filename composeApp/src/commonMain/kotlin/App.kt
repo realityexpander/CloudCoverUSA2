@@ -137,6 +137,11 @@ fun App() {
             } else {
                 imageRequests.add(
                     ImageRequest.Builder(localContext)
+                        .httpHeaders(
+                            headers = NetworkHeaders.Builder()
+                                .add("Host", "https://realityexpander.github.io/CloudCoverUSA2/")
+                                .build()
+                        )
 //                        .data("$rootUrl$finishedCount.jpg") //?" + (0..1_000_000).random())
 //                        .data("$rootUrl$finishedCount.jpg?" + (0..1_000_000).random())
 //                        .data("https://realityexpander.github.io/CloudCoverUSA2/icon.png") //?" + (0..1_000_000).random()) //
