@@ -81,11 +81,30 @@ security cms -D -i composeApp/build/compose/binaries/main/app/Cloud\ Cover\ USA\
 ```bash
 codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/binaries/main/app/Cloud Cover USA 2.app'
 ```
+### Check Apple System Status
+- https://developer.apple.com/system-status/
+
+### Check Signing/Validation Resources
+- https://dev.to/ajpagente/how-to-check-if-a-macos-app-is-notarized-8p4#:~:text=You%20can%20check%20if%20a,source%20indicates%20Unnotarized%20Developer%20ID.
+- https://developer.apple.com/forums/thread/130560
+- https://developer.apple.com/forums/thread/706442
+- https://developer.apple.com/forums/thread/701514
+- https://forums.developer.apple.com/forums/thread/675354
 
 ## TestFlight
 - Upload using Transporter app
 - https://appstoreconnect.apple.com/apps/6498872435/testflight/macos
 - Download using TestFlight app
+
+## Show java version
+```bash
+/usr/libexec/java_home -V  # List all versions
+```
+
+### Change java version
+```bash
+export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
+``` 
 
 ## Last commit built with:
 * Android Studio Koala | 2023.3.2 Canary 2

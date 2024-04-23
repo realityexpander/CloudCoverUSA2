@@ -1,4 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.util.*
 
 plugins {
@@ -16,20 +18,20 @@ kotlin {
             }
         }
     }
-    
+
+    jvmToolchain(11)
     jvm("desktop")
 
-//    js {
-//        moduleName = "app"
-//        binaries.executable()
-//        browser {
-//            useCommonJs()
-//            commonWebpackConfig {
-//                outputFileName = "$moduleName.js"
-//
-//            }
-//        }
-//    }
+    js {
+        moduleName = "app"
+        binaries.executable()
+        browser {
+            useCommonJs()
+            commonWebpackConfig {
+                outputFileName = "$moduleName.js"
+            }
+        }
+    }
 
     listOf(
         iosX64(),
@@ -66,7 +68,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
 
             // for webview
-            api("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
+//            api("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
+//            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
 
         }
         androidMain.dependencies {
@@ -78,6 +81,8 @@ kotlin {
             implementation(libs.androidx.media3.exoplayer)
             implementation(libs.androidx.media3.exoplayer.dash)
             implementation(libs.androidx.media3.ui)
+
+            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -88,15 +93,23 @@ kotlin {
             // for vlcj
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.vlcj)
+
+            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+
+            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
         }
-//        jsMain.dependencies {
-//            implementation(libs.ktor.client.js)
-//            implementation(compose.html.core) // Required for Compose Web/Canvas on JS
-//        }
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
+            implementation(compose.html.core) // Required for Compose Web/Canvas on JS
+        }
     }
+}
+
+compose.experimental {
+    web.application {}
 }
 
 android {
@@ -168,7 +181,7 @@ compose.desktop {
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appCategory = "public.app-category.weather"
-                minimumSystemVersion = "12.0"
+//                minimumSystemVersion = "12.0"
 
                 iconFile.set(project.file("icon.icns"))
                 infoPlist {
@@ -228,3 +241,29 @@ compose.desktop {
         }
     }
 }
+
+// Publish to GitHub Pages
+// Task to copy from ./composeApp/build/dist/wasmJs/productionExecutable to ./docs
+tasks.register("copyJsToDocs") {
+    group = "build"
+    doLast {
+//        val wasmJsDir = project.file("./build/dist/Js/productionExecutable")
+        val wasmJsDir = project.file("./build/dist/Js/developmentExecutable")
+        val docsDir = file(rootDir.path + "/docs")
+        wasmJsDir.copyRecursively(docsDir, overwrite = true)
+    }
+}
+//tasks.getByName("jsBrowserDistribution").finalizedBy("copyJsToDocs")
+tasks.getByName("jsBrowserDevelopmentWebpack").finalizedBy("copyJsToDocs")
+
+
+// Task to clean ./docs (docs is the dir that will be published to GitHub Pages)
+tasks.register("cleanDocs") {
+    group = "build"
+    doLast {
+        val docsDir = file(rootDir.path + "/docs")
+        docsDir.deleteRecursively()
+    }
+}
+tasks.getByName("clean").dependsOn("cleanDocs")
+
