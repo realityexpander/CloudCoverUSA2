@@ -181,7 +181,7 @@ compose.desktop {
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appCategory = "public.app-category.weather"
-//                minimumSystemVersion = "12.0"
+                minimumSystemVersion = "12.0" // available in compose-plugin 1.6.10-dev1584
 
                 iconFile.set(project.file("icon.icns"))
                 infoPlist {
