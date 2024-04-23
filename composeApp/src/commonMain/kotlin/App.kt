@@ -96,8 +96,8 @@ fun App() {
         val rootUrl by remember(isBigMapVisible) {
             mutableStateOf(
                 if (isBigMapVisible)
-//                    "https://www.ssec.wisc.edu/data/us_comp/big/image"
-                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/big/image"
+                    "https://www.ssec.wisc.edu/data/us_comp/big/image"
+//                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/big/image"
                 else
 //                    "https://www.ssec.wisc.edu/data/us_comp/image"
                     "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image"
@@ -137,8 +137,10 @@ fun App() {
             } else {
                 imageRequests.add(
                     ImageRequest.Builder(localContext)
-                        .data("$rootUrl$finishedCount.jpg") //?" + (0..1_000_000).random())
-//                        .data("https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+//                        .data("$rootUrl$finishedCount.jpg&w=300") //?" + (0..1_000_000).random())
+                        .data("$rootUrl$finishedCount.jpg&w=300") //?" + (0..1_000_000).random())
+//                        .data("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300")
+//                        .data("https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e")
 //						.crossfade(true) // prevents flicker
                         .listener(
                             onStart = { request ->

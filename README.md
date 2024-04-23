@@ -73,11 +73,11 @@ spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/app/Clo
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/dmg/Cloud Cover USA 2-1.0.0.dmg' -v
 ```
 
-### Read security cert
+### Show security cert
 ```bash
 security cms -D -i composeApp/build/compose/binaries/main/app/Cloud\ Cover\ USA\ 2.app/Contents/embedded.provisionprofile
 ```
-### Dusokay Entitlements
+### Show Entitlements
 ```bash
 codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/binaries/main/app/Cloud Cover USA 2.app'
 ```
@@ -105,6 +105,10 @@ codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/bina
 ```bash
 export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 ``` 
+
+### Fetch Tester (JS)
+`fetch("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300").then( (s)=> s.text() ).then( (s)=>console.log(s) )`
+```
 
 ## Last commit built with:
 * Android Studio Koala | 2023.3.2 Canary 2
