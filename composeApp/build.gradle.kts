@@ -66,11 +66,6 @@ kotlin {
 
             // for vlcj - necessary?
             implementation(libs.kotlinx.coroutines.core)
-
-            // for webview
-//            api("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
-//            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
-
         }
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -82,7 +77,7 @@ kotlin {
             implementation(libs.androidx.media3.exoplayer.dash)
             implementation(libs.androidx.media3.ui)
 
-            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
+            implementation(libs.github.compose.webview.multiplatform)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -94,12 +89,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.vlcj)
 
-            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
+            implementation(libs.github.compose.webview.multiplatform)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-
-            implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.2")
+            implementation(libs.github.compose.webview.multiplatform)
         }
         jsMain.dependencies {
             implementation(libs.ktor.client.js)
@@ -124,7 +118,7 @@ android {
         applicationId = "com.realityexpander.cloudcoverusa2"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
     }
     packaging {
@@ -145,6 +139,10 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+
+        // Splash Screen
+        implementation(libs.androidx.core.splashscreen)
+        debugImplementation(libs.androidx.core.splashscreen)
     }
 //    kotlin {
 //        jvmToolchain(17)
