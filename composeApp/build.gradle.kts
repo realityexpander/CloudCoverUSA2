@@ -62,7 +62,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
 
-            implementation(libs.slf4j.nop)
+            implementation(libs.slf4j.nop) // prevent silly warning that's been there for years
 
             // for vlcj - necessary?
             implementation(libs.kotlinx.coroutines.core)
@@ -96,6 +96,7 @@ kotlin {
             implementation(libs.github.compose.webview.multiplatform)
         }
         jsMain.dependencies {
+            // js target has problems using fetch from js, always gives CORS issues.
             implementation(libs.ktor.client.js)
             implementation(compose.html.core) // Required for Compose Web/Canvas on JS
         }
