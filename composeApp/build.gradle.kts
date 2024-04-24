@@ -13,8 +13,8 @@ kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "11"
-//                jvmTarget = "17"
+//                jvmTarget = "11"
+                jvmTarget = "17"
             }
         }
     }
@@ -118,8 +118,8 @@ android {
         applicationId = "com.realityexpander.cloudcoverusa2"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "1.1"
     }
     packaging {
         resources {
@@ -132,10 +132,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-//        sourceCompatibility = JavaVersion.VERSION_17
-//        targetCompatibility = JavaVersion.VERSION_17
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
@@ -144,9 +144,9 @@ android {
         implementation(libs.androidx.core.splashscreen)
         debugImplementation(libs.androidx.core.splashscreen)
     }
-//    kotlin {
-//        jvmToolchain(17)
-//    }
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 dependencies {
     implementation(libs.androidx.media3.session)

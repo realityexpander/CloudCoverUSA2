@@ -1,12 +1,7 @@
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberTransformableState
@@ -31,21 +26,16 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwipeableDefaults.AnimationSpec
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CalendarViewWeek
-import androidx.compose.material.icons.filled.Help
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Today
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -53,16 +43,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberAsyncImagePainter
-import coil3.fetch.ImageFetchResult
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
-import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import kotlinx.coroutines.delay
@@ -83,27 +69,28 @@ fun App() {
         val scope = rememberCoroutineScope()
 
         var isLoadingFinished by remember { mutableStateOf(false) }
-        var isBigMapVisible by remember { mutableStateOf(false) }
+        var is12HrMapVisible by remember { mutableStateOf(false) }
         var isShowAboutInfo by remember { mutableStateOf(false) }
         var isInitialized by remember { mutableStateOf(false) }
         var is5DayMovieVisible by remember { mutableStateOf(false) }
+        var isInternetConnectivityWarningVisible by remember { mutableStateOf(false) }
 
         // Log
         var showLog by remember { mutableStateOf(false) }
         var loadingLog by remember { mutableStateOf("Idle.") }
 
         // Animation specs
-        val numFrames by remember(isBigMapVisible) {
-            mutableStateOf(if (isBigMapVisible) 25 else 8)
+        val numFrames by remember(is12HrMapVisible) {
+            mutableStateOf(if (is12HrMapVisible) 25 else 8)
         }
-        val rootUrl by remember(isBigMapVisible) {
+        val rootUrl by remember(is12HrMapVisible) {
             mutableStateOf(
-                if (isBigMapVisible)
+                if (is12HrMapVisible)
                     "https://www.ssec.wisc.edu/data/us_comp/big/image"
-//                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/big/image"
+//                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/big/image" // using proxy for js target
                 else
                     "https://www.ssec.wisc.edu/data/us_comp/image"
-//                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image"
+//                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image" // using proxy for js target
             )
         }
         var isFirstFrame by remember { mutableStateOf(true) }
@@ -132,15 +119,32 @@ fun App() {
             loadingLog = "$msg\n$loadingLog"
         }
 
+        var shouldReset by remember { mutableStateOf(false) }
+        fun resetReloadMap() {
+            scale = 1f
+            offset = Offset.Zero
+            isLoadingFinished = false
+            scope.launch {
+                SingletonImageLoader.get(localContext).diskCache?.clear()
+                SingletonImageLoader.get(localContext).memoryCache?.clear()
+                imageRequests.clear()
+                isFirstFrame = true
+                isInitialized = false
+                finishedCount = 0
+                currentFrame = -1
+
+                shouldReset = !shouldReset // triggers reset by changing the value
+            }
+        }
+
         // Load 1 at a time in sequence due to how Image API works
-        LaunchedEffect(finishedCount) {
+        LaunchedEffect(finishedCount, shouldReset) {
             if (finishedCount >= numFrames) {
                 isLoadingFinished = true
             } else {
                 val random = (0..1_000_000).random() // allows for cache busting
                 imageRequests.add(
                     ImageRequest.Builder(localContext)
-//                        .data("$rootUrl$finishedCount.jpg") //?" + (0..1_000_000).random())
                         .data("$rootUrl$finishedCount.jpg?$random")
 //                        .data("https://realityexpander.github.io/CloudCoverUSA2/icon.png") //?" + (0..1_000_000).random()) //
 //                        .data("https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image0.jpg")
@@ -161,10 +165,18 @@ fun App() {
 
                                     println("Image finishedCount: $finishedCount, numFrames: $numFrames, currentFrame: $currentFrame")
                                     finishedCount++
+                                    isInternetConnectivityWarningVisible = false
                                 }
                             },
                             onError = { request, throwable ->
                                 addToLog("Image ${request.diskCacheKey} failed to load, ${throwable.throwable.message}.")
+
+                                // Restart from 0
+                                scope.launch {
+                                    isInternetConnectivityWarningVisible = true
+                                    delay(1000.milliseconds)
+                                    resetReloadMap()
+                                }
                             },
                             onCancel = { request ->
                                 val frameIdx = request.httpHeaders["finishedCount"]?.toInt()
@@ -174,10 +186,8 @@ fun App() {
                         )
                         // leaves blank frames .diskCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
 //						flickers .memoryCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
-
                         //
                         //.networkCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
-
                         // brief flicker but plays all frames
 //                        .diskCacheKey("$rootUrl$finishedCount.jpg")
                         .diskCacheKey("$rootUrl$finishedCount.jpg?$random")
@@ -199,6 +209,8 @@ fun App() {
         LaunchedEffect(isLoadingFinished) {
             if (!isLoadingFinished) return@LaunchedEffect
             if (imageRequests.size == 0) return@LaunchedEffect
+
+            isInternetConnectivityWarningVisible = false
 
             while (true) {
                 if (currentFrame == 0)
@@ -245,7 +257,6 @@ fun App() {
                         y = (offset.y + scale * panChange.y).coerceIn(-maxY, maxY)
                     )
                 }
-
             // Satellite image
             Column(
                 Modifier.fillMaxWidth(),
@@ -296,7 +307,6 @@ fun App() {
                         modifier = Modifier
                             .fillMaxSize(),
                         url = "https://www.ssec.wisc.edu/data/us_comp/us_comp_large.mp4",
-//                        url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                         onSetupComplete = {
                             isLoadingMovie = false
                         }
@@ -374,11 +384,29 @@ fun App() {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top,
             ) {
+                AnimatedVisibility(isInternetConnectivityWarningVisible) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(Color.Red.copy(alpha = 0.8f))
+                        ,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            "No Internet Connection - Please check Wifi.",
+                            color = Color.White,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+
+                // Show Controls
                 Row(
                     Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Spacer(modifier = Modifier.size(10.dp))
+                    Spacer(modifier = Modifier.size(8.dp))
 
                     // About
                     Button(
@@ -402,7 +430,7 @@ fun App() {
                     // Toggle 4/12 hr map
                     Button(
                         onClick = {
-                            isBigMapVisible = !isBigMapVisible
+                            is12HrMapVisible = !is12HrMapVisible
                             scope.launch {
                                 scale = 1f
                                 offset = Offset.Zero
@@ -422,7 +450,7 @@ fun App() {
                         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
                     ) {
                         Icon(
-                            imageVector = if (isBigMapVisible)
+                            imageVector = if (is12HrMapVisible)
                                 Icons.Filled.CalendarToday // 12hr
                             else
                                 Icons.Filled.Today, // 4hr
@@ -431,7 +459,7 @@ fun App() {
                         )
                         Spacer(modifier = Modifier.size(5.dp))
                         Text(
-                            if (isBigMapVisible) "12hr" else "4hr",
+                            if (is12HrMapVisible) "12hr" else "4hr",
                             color = Color.White.copy(alpha = 0.5f)
                         )
                     }
@@ -463,23 +491,10 @@ fun App() {
                     }
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    // Reset zoom & map
+                    // Reload map, reset zoom & fit to screen
                     Button(
                         onClick = {
-                            scale = 1f
-                            offset = Offset.Zero
-                            isLoadingFinished = false
-                            scope.launch {
-                                SingletonImageLoader.get(localContext).diskCache?.clear()
-                                SingletonImageLoader.get(localContext).memoryCache?.clear()
-
-                                imageRequests.clear()
-                                isFirstFrame = true
-                                isInitialized = false
-                                finishedCount = 0
-                                currentFrame = -1
-                            }
-
+                            resetReloadMap()
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.5f),
@@ -530,7 +545,33 @@ fun App() {
                         }
                     }
                     Spacer(modifier = Modifier.size(12.dp))
+                }
 
+                // Show debug info
+                if (isDebugModeActive) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Button(
+                            onClick = {
+                                showLog = !showLog
+                            }
+                        ) {
+                            Text("Show Log")
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        if (showLog) {
+                            Text(
+                                loadingLog,
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                lineHeight = 12.sp
+                            )
+                        }
+                    }
                 }
 
                 AnimatedVisibility(isShowAboutInfo) {
@@ -574,34 +615,6 @@ fun App() {
                     Text(
                         "Loading current satellite frames...",
                         color = Color.White
-                    )
-                }
-            }
-        }
-
-        // Show debug info
-        if (isDebugModeActive) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                Spacer(modifier = Modifier.size(40.dp))
-                Button(
-                    onClick = {
-                        showLog = !showLog
-                    }
-                ) {
-                    Text("Show Log")
-                }
-                Spacer(modifier = Modifier.size(10.dp))
-                if (showLog) {
-                    Text(
-                        loadingLog,
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        lineHeight = 12.sp
                     )
                 }
             }
