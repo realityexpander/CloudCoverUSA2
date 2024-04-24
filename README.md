@@ -110,6 +110,11 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 `fetch("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300").then( (s)=> s.text() ).then( (s)=>console.log(s) )`
 ```
 
+## Publishing App
+- Free Privacy Generator: https://app.freeprivacypolicy.com/download/a0f10c87-ac25-471a-94bb-85ef6a659811
+- App Icon Generator (for iOS & Android formats)
+  - https://www.appicon.co/#image-sets
+
 ## Last commit built with:
 * Android Studio Koala | 2023.3.2 Canary 2
 * Build #AI-233.14475.28.2332.11606850, built on March 21, 2024

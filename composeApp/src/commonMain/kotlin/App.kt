@@ -102,8 +102,8 @@ fun App() {
                     "https://www.ssec.wisc.edu/data/us_comp/big/image"
 //                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/big/image"
                 else
-//                    "https://www.ssec.wisc.edu/data/us_comp/image"
-                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image"
+                    "https://www.ssec.wisc.edu/data/us_comp/image"
+//                    "https://wsrv.nl/?url=https://www.ssec.wisc.edu/data/us_comp/image"
             )
         }
         var isFirstFrame by remember { mutableStateOf(true) }
