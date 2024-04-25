@@ -17,12 +17,14 @@ To run desktop:
 `./gradlew composeApp:run`
 
 ## Android Screenshots
-<img width="300" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/2e61a455-5f26-42d8-b7dc-75da0ace24b8">
-<img width="600" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/19e11983-16ad-4115-a2c2-7ecd903e4a57">
+<img width="300" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/b4d648a8-d694-4468-b63b-73de6ccd165a">
+<img width="600" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/97c29961-72fe-4d72-bd55-9e9b212bc3b1">
 
 ## iOS Screenshots
-<img width="300" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/bde7f6ca-e3db-41f1-91c1-bf940e4a4be3">
-<img width="600" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/c4531bd7-bca1-4e9c-a403-241630c09cc9">
+<img width="300" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/bc72685a-20bb-4541-908d-d8c4e091aad8">
+<img width="600" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/c3fa61ed-16c9-4215-a87d-b06da60b482e">
+
+
 
 ## Desktop Screenshots
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/92b9d692-cfaf-4f3f-950d-7bb130afd457">
