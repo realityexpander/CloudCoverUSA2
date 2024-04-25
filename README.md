@@ -155,7 +155,7 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 * mobi.hsz.idea.gitignore (4.5.3)
 * com.abeade.plugin.figma.import (1.0.8)
 
-XCode Version 15.3 (15E204a)
+* XCode Version 15.3 (15E204a)
 
 
 

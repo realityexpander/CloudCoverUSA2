@@ -266,3 +266,24 @@ tasks.register("cleanDocs") {
 }
 tasks.getByName("clean").dependsOn("cleanDocs")
 
+// From: https://youtrack.jetbrains.com/issue/KT-67603
+//project.afterEvaluate {
+//    tasks.withType<XCFrameworkTask>().forEach { task ->
+//        task.doLast {
+//            val xcframework = task.outputs.files.files.first().toPath()
+//            val iosFrameworks = Files.find(xcframework, 2, { path, _ ->
+//                val isFramework = path.fileName.endsWith(task.baseName.get() + ".framework")
+//                val destination = path.getName(path.count() - 2).fileName.toString()
+//                val isIOS = destination.startsWith("ios-")
+//                isFramework && isIOS
+//            })
+//
+//            for (framework in iosFrameworks) {
+//                project.copy {
+//                    from(project.file("assets/PrivacyInfo.xcprivacy"))
+//                    into(framework)
+//                }
+//            }
+//        }
+//    }
+//}
