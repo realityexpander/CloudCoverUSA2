@@ -24,8 +24,6 @@ To run desktop:
 <img width="300" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/bc72685a-20bb-4541-908d-d8c4e091aad8">
 <img width="600" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/c3fa61ed-16c9-4215-a87d-b06da60b482e">
 
-
-
 ## Desktop Screenshots
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/92b9d692-cfaf-4f3f-950d-7bb130afd457">
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/7dbdd5d5-b459-4d3e-97d9-ba6a4fdf1249">
