@@ -190,8 +190,6 @@ compose.desktop {
                         <string>Cloud Cover USA 2 requires access to the internet to download weather data.</string>
                         <key>com.apple.security.files.user-selected.read-write</key>
                         <true/>
-                        <key>com.apple.security.files.downloads.read-write</key>
-                        <true/>
                         <key>com.apple.security.network.client</key>
                         <true/>
                     """.trimIndent()
