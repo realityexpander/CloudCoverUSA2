@@ -120,6 +120,21 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 - App Icon Generator (for iOS & Android formats)
   - https://www.appicon.co/#image-sets
 
+### Target desktop MacOS build:
+  - Bump Build version in `composeApp/build.gradle.kts`
+  - `./gradlew composeApp:packagePkg`
+  - Upload via Transporter
+  - Wait to appear in App Store Connect (may take 2-3 min to appear, 3-5 to process)
+  - Check release in TestFlight
+
+### Target iOS
+  - Run `Project > Archive` in XCode
+  - `Verify` and `Check Privacy` in Organizer
+  - Upload to App Store Connect
+    - Wait for processing
+  - Check release in TestFlight, roll out to internal testers, production
+ 
+
 ## Last commit built with:
 
 * Android Studio Koala | 2023.3.2 Canary 2
