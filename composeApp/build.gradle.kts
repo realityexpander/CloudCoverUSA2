@@ -175,8 +175,8 @@ compose.desktop {
             includeAllModules = true
 
             macOS {
-                packageBuildVersion = "26"
-                appStore = false // make true for Mac App Store, false for external distribution
+                packageBuildVersion = "28"
+                appStore = true // make true for Mac App Store, false for external distribution
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appCategory = "public.app-category.weather"

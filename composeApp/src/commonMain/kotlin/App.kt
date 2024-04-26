@@ -58,7 +58,7 @@ import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
 val platform = getPlatform()
-const val isDebugModeActive = false
+const val isDebugModeActive = true
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -467,7 +467,8 @@ fun App() {
 
                     // Show 5 day movie
                     // Check if on Desktop (hide video for now)
-                    if (!platform.name.contains("Java")) {
+                    //if(platform.name.contains("Java")) {
+                    if (true) {
                         Button(
                             onClick = {
                                 is5DayMovieVisible = true
