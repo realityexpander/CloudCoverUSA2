@@ -467,7 +467,7 @@ fun App() {
 
                     // Show 5 day movie
                     // Check if on Desktop (hide video for now)
-                    //if(platform.name.contains("Java")) {
+//                    if(platform.name.contains("Java")) {
                     if (true) {
                         Button(
                             onClick = {

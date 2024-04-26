@@ -13,13 +13,12 @@ kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-//                jvmTarget = "11"
                 jvmTarget = "17"
             }
         }
     }
 
-    jvmToolchain(11)
+    jvmToolchain(17)
     jvm("desktop")
 
     js {
@@ -133,8 +132,6 @@ android {
         }
     }
     compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_11
-//        targetCompatibility = JavaVersion.VERSION_11
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -157,6 +154,8 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "MainKt"
+
+        // Set in IntelliJ IDEA -> Settings...-> Build, Execution, Deployment -> Build Tools -> Gradle -> Gradle JVM
         // Built with JDK Corretto 18.0.2
         // Built with JDK Corretto 20.0.1
         // Built with Temurin 20.0.2
