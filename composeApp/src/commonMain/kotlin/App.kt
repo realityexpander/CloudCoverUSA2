@@ -466,8 +466,8 @@ fun App() {
                     Spacer(modifier = Modifier.size(10.dp))
 
                     // Show 5 day movie
-                    // Check if on Desktop (hide video for now)
-//                    if(platform.name.contains("Java")) {
+                    // Hide video on desktop, for now.
+//                    if(!platform.name.contains("Java")) {
                     if (true) {
                         Button(
                             onClick = {
