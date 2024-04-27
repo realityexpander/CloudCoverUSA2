@@ -58,7 +58,7 @@ import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
 val platform = getPlatform()
-const val isDebugModeActive = true
+const val isDebugModeActive = false
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
