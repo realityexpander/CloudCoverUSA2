@@ -76,8 +76,8 @@ fun App() {
         var isInternetConnectivityWarningVisible by remember { mutableStateOf(false) }
 
         // Log
-        var showLog by remember { mutableStateOf(false) }
-        var loadingLog by remember { mutableStateOf("Idle.") }
+        var isDebugLogVisible by remember { mutableStateOf(false) }
+        var debugLog by remember { mutableStateOf("Idle.") }
 
         // Animation specs
         val numFrames by remember(is12HrMapVisible) {
@@ -115,8 +115,8 @@ fun App() {
         var offset by remember { mutableStateOf(Offset.Zero) }
         var currentFrame by remember { mutableStateOf(-1) }
 
-        fun addToLog(msg: String) {
-            loadingLog = "$msg\n$loadingLog"
+        fun addToDebugLog(msg: String) {
+            debugLog = "$msg\n$debugLog"
         }
 
         var shouldReset by remember { mutableStateOf(false) }
@@ -159,7 +159,7 @@ fun App() {
                             },
                             onSuccess = { request, response ->
                                 if (finishedCount < numFrames) {
-                                    addToLog("Image $finishedCount loaded, key=${response.memoryCacheKey}.")
+                                    addToDebugLog("Image $finishedCount loaded, key=${response.memoryCacheKey}.")
                                     imageWidth = response.image.width.toFloat()
                                     imageHeight = response.image.height.toFloat()
 
@@ -169,7 +169,7 @@ fun App() {
                                 }
                             },
                             onError = { request, throwable ->
-                                addToLog("Image ${request.diskCacheKey} failed to load, ${throwable.throwable.message}.")
+                                addToDebugLog("Image ${request.diskCacheKey} failed to load, ${throwable.throwable.message}.")
 
                                 // Restart from 0
                                 scope.launch {
@@ -180,7 +180,7 @@ fun App() {
                             },
                             onCancel = { request ->
                                 val frameIdx = request.httpHeaders["finishedCount"]?.toInt()
-                                addToLog("Image cancelled, finishedCount = $frameIdx")
+                                addToDebugLog("Image cancelled, finishedCount = $frameIdx")
                                 println("Cancelled, request.httpHeaders frameIdx= $frameIdx")
                             }
                         )
@@ -558,15 +558,15 @@ fun App() {
                     ) {
                         Button(
                             onClick = {
-                                showLog = !showLog
+                                isDebugLogVisible = !isDebugLogVisible
                             }
                         ) {
                             Text("Show Log")
                         }
                         Spacer(modifier = Modifier.size(10.dp))
-                        if (showLog) {
+                        if (isDebugLogVisible) {
                             Text(
-                                loadingLog,
+                                debugLog,
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 lineHeight = 12.sp
