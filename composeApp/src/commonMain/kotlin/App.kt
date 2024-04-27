@@ -575,6 +575,7 @@ fun App() {
                     }
                 }
 
+                // About info
                 AnimatedVisibility(isShowAboutInfo) {
                     Text(
                         "Cloud Cover USA 2.0\n" +
