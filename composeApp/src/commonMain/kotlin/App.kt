@@ -110,15 +110,13 @@ fun App() {
             mutableStateOf(localScreenWidth > localScreenHeight)
         }
 
+        // Zoom & Pan
         val kMaxZoomInFactor = 5f
         var scale by remember { mutableStateOf(1f) }
         var offset by remember { mutableStateOf(Offset.Zero) }
         var currentFrame by remember { mutableStateOf(-1) }
 
-        fun addToDebugLog(msg: String) {
-            debugLog = "$msg\n$debugLog"
-        }
-
+        // Reset the map
         var shouldReset by remember { mutableStateOf(false) }
         fun resetReloadMap() {
             scale = 1f
@@ -135,6 +133,10 @@ fun App() {
 
                 shouldReset = !shouldReset // triggers reset by changing the value
             }
+        }
+
+        fun addToDebugLog(msg: String) {
+            debugLog = "$msg\n$debugLog"
         }
 
         // Load 1 at a time in sequence due to how Image API works
