@@ -116,7 +116,6 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 
 ### Fetch Tester (JS)
 `fetch("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300").then( (s)=> s.text() ).then( (s)=>console.log(s) )`
-```
 
 ## Publishing App
 - Free Privacy Generator: https://app.freeprivacypolicy.com/download/a0f10c87-ac25-471a-94bb-85ef6a659811
