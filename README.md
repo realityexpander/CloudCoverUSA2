@@ -138,7 +138,7 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
  
 
 ## Last commit built with:
-
+```
 * Android Studio Koala | 2023.3.2 Canary 2
 * Build #AI-233.14475.28.2332.11606850, built on March 21, 2024
 * Runtime version: 17.0.10+0-17.0.10b1087.21-11572160 aarch64
@@ -169,7 +169,7 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 * com.github.copilot (1.5.2.5345)
 * mobi.hsz.idea.gitignore (4.5.3)
 * com.abeade.plugin.figma.import (1.0.8)
-
+```
 * XCode Version 15.3 (15E204a)
 
 
