@@ -54,9 +54,9 @@ rm -R icon.iconset
 - Copy the `icon.icns` file to the `composeApp` folder.
 - Copy the `Icon1024.png` to the `composeApp/src/commonMain/composeResources/drawable` folder.
 
-## Check notarization status
+# Check notarization status
 
-## Check main (not release)
+### Check main (not release)
 ```bash
 # Check the app
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/app/Cloud Cover USA 2.app' -v
@@ -70,7 +70,7 @@ spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/dmg/Cloud Cover
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main/pkg/Cloud Cover USA 2-1.0.0.pkg' -v
 ```
 
-## Check main-release
+### Check main-release
 ```bash
 # Check the release app
 spctl -a -vvv -t install 'composeApp/build/compose/binaries/main-release/app/Cloud Cover USA 2.app' -v
@@ -99,12 +99,8 @@ codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/bina
 - https://developer.apple.com/forums/thread/701514
 - https://forums.developer.apple.com/forums/thread/675354
 
-## TestFlight
-- Upload using Transporter app
-- https://appstoreconnect.apple.com/apps/6498872435/testflight/macos
-- Download using TestFlight app
 
-## Show java version
+### Show java version
 ```bash
 /usr/libexec/java_home -V  # List all versions
 ```
@@ -112,15 +108,27 @@ codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/bina
 ### Change java version
 ```bash
 export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
-``` 
+```
 
-### Fetch Tester (JS)
+### Fetch Tester (JS - for debug console)
 `fetch("https://wsrv.nl/?url=https://plus.unsplash.com/premium_photo-1661438314870-d819b854b58e&w=300").then( (s)=> s.text() ).then( (s)=>console.log(s) )`
+
+
+## TestFlight
+- Upload using Transporter app
+- https://appstoreconnect.apple.com/apps/6498872435/testflight/macos
+- Download using TestFlight app
 
 ## Publishing App
 - Free Privacy Generator: https://app.freeprivacypolicy.com/download/a0f10c87-ac25-471a-94bb-85ef6a659811
 - App Icon Generator (for iOS & Android formats)
   - https://www.appicon.co/#image-sets
+
+
+# Dev target notes:
+
+### Target Android
+  - Works as expected.
 
 ### Target desktop MacOS build:
   - Bump Build version in `composeApp/build.gradle.kts`
@@ -129,6 +137,10 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
   - Wait to appear in App Store Connect (may take 2-3 min to appear, 3-5 to process)
   - Check release in TestFlight
 
+  - The `VLCJ` Video Player and `WebView` Java libraries crash when accessed at runtime for apps deployed to the 
+    Apple App Store. So desktop target for MacOS is currently broken, and I filed a bug report at jetbrains:
+    - https://github.com/JetBrains/compose-multiplatform/issues/4712
+
 ### Target iOS
   - Run `Project > Archive` in XCode
   - `Verify` and `Check Privacy` in Organizer
@@ -136,6 +148,15 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
     - Wait for processing
   - Check release in TestFlight, roll out to internal testers, production
  
+### Target JS
+  - Runs fine except the images will not load via Coil3's `AsyncImage`. 
+    - Images served from the local server work fine
+    - Images served from other open-CORS sites works fine
+    - Images served via proxy DO NOT work (?)
+  - Workarounds require research:
+    - Try another library.
+    - Set option headers(?)
+
 
 ## Last commit built with:
 ```
