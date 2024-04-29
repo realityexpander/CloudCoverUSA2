@@ -29,7 +29,7 @@ To run desktop:
 <img width="912" src="https://github.com/realityexpander/CloudCoverUSA2/assets/5157474/7dbdd5d5-b459-4d3e-97d9-ba6a4fdf1249">
 
 ## Bug Report
-- Re: Deploaying MacOS Desktop App to Apple App Store: https://github.com/JetBrains/compose-multiplatform/issues/4712 
+- Re: Deploying MacOS Desktop App to Apple App Store: https://github.com/JetBrains/compose-multiplatform/issues/4712 
 
 ## Create Icons for MacOS
 - make a folder `iconMaker` in the root of the project
