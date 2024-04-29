@@ -99,6 +99,7 @@ codesign --display --entitlements -dv --verbose=4 'composeApp/build/compose/bina
 - https://developer.apple.com/forums/thread/701514
 - https://forums.developer.apple.com/forums/thread/675354
 
+## Java Versions for Gradle Builds
 
 ### Show java version
 ```bash
