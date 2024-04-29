@@ -263,6 +263,7 @@ tasks.register("cleanDocs") {
 }
 tasks.getByName("clean").dependsOn("cleanDocs")
 
+// Add .xcprivacy to iOS frameworks (This doesn't seem necessary, as it can be statically linked in XCode)
 // From: https://youtrack.jetbrains.com/issue/KT-67603
 //project.afterEvaluate {
 //    tasks.withType<XCFrameworkTask>().forEach { task ->
