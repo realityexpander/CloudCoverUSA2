@@ -10,6 +10,8 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(17)
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -18,7 +20,6 @@ kotlin {
         }
     }
 
-    jvmToolchain(17)
     jvm("desktop")
 
     js {
