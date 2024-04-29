@@ -130,25 +130,25 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
 ### Target Android
   - Works as expected.
 
-### Target desktop MacOS build:
-  - Bump Build version in `composeApp/build.gradle.kts`
-  - `./gradlew composeApp:packagePkg`
-  - Upload via Transporter
-  - Wait to appear in App Store Connect (may take 2-3 min to appear, 3-5 to process)
-  - Check release in TestFlight
-
-  - The `VLCJ` Video Player and `WebView` Java libraries crash when accessed at runtime for apps deployed to the 
-    Apple App Store. So desktop target for MacOS is currently broken, and I filed a bug report at jetbrains:
-    - https://github.com/JetBrains/compose-multiplatform/issues/4712
-
 ### Target iOS
   - Run `Project > Archive` in XCode
   - `Verify` and `Check Privacy` in Organizer
   - Upload to App Store Connect
     - Wait for processing
   - Check release in TestFlight, roll out to internal testers, production
+
+### Target desktop MacOS build (CURRENTLY NOT DISTRIBUTABLE VIA APPLE APP STORE)
+  - Bump Build version in `composeApp/build.gradle.kts`
+  - `./gradlew composeApp:packagePkg`
+  - Upload via Transporter
+  - Wait to appear in App Store Connect (may take 2-3 min to appear, 3-5 to process)
+  - Check release in TestFlight
+
+  - **IMPORTANT**: The `VLCJ` Video Player and `WebView` Java libraries crash when accessed at runtime for apps deployed to the 
+    Apple App Store. So desktop target for MacOS is currently broken, and I filed a bug report at jetbrains:
+    - https://github.com/JetBrains/compose-multiplatform/issues/4712
  
-### Target JS
+### Target JS (CURRENTLY DOES NOT LOAD IMAGES)
   - Runs fine except the images will not load via Coil3's `AsyncImage`. 
     - Images served from the local server work fine
     - Images served from other open-CORS sites works fine
