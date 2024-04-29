@@ -1,5 +1,5 @@
 # Cloud Cover USA 2
-Shows current cloud cover for North America, Mexico and Canada
+Shows animated current cloud cover for North America, Mexico and Canada
 
 [<img src="app_publishing/app_store.png" width="150">](https://apps.apple.com/us/app/cloud-cover-usa-2i/id6499233780)
 [<img src="app_publishing/play_store.png" width="150">](https://play.google.com/store/apps/details?id=com.realityexpander.cloudcoverusa2)
