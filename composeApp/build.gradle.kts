@@ -224,11 +224,11 @@ compose.desktop {
             version.set("7.4.2")
             isEnabled.set(false)
             configurationFiles.from(file("proguard/proguard-rules.pro"))
-            optimize.set(false)
-            obfuscate.set(false)
+            optimize.set(false) // disable optimization for now
+            obfuscate.set(false)  // disable obfuscation for now
         }
 
-        // For Webview
+        // For WebView
         jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
         jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED")
         if (System.getProperty("os.name").contains("Mac")) {

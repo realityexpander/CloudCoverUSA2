@@ -186,14 +186,7 @@ fun App() {
                                 println("Cancelled, request.httpHeaders frameIdx= $frameIdx")
                             }
                         )
-                        // leaves blank frames .diskCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
-//						flickers .memoryCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
-                        //
-                        //.networkCachePolicy(CachePolicy.DISABLED) // Always load the latest upon launch
-                        // brief flicker but plays all frames
-//                        .diskCacheKey("$rootUrl$finishedCount.jpg")
                         .diskCacheKey("$rootUrl$finishedCount.jpg?$random")
-                        //flicker .memoryCacheKey("$rootUrl$finishedCount.jpg?" + (0..1_000_000).random())
                         .httpHeaders(
                             headers = NetworkHeaders.Builder()
                                 .add("finishedCount", finishedCount.toString())
@@ -227,6 +220,7 @@ fun App() {
             }
         }
 
+        // LEAVE FOR FUTURE USE
 //        // Change scale and offset when content size changes (e.g. rotation)
 //        LaunchedEffect(contentWidth, contentHeight) {
 //            if (contentWidth == 0 || contentHeight == 0) return@LaunchedEffect
