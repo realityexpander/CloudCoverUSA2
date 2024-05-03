@@ -9,6 +9,8 @@ Shows animated current cloud cover for North America, Mexico and Canada
 
 This is a Kotlin Multiplatform project targeting Android, iOS & Desktop.
 
+YouTube Series playlist: https://www.youtube.com/playlist?list=PLzUxWOrVXB4RVcPIv0aDb6kAqWWFIv6UQ
+
 To run iOS & Android, select from the Run Configuration menu. 
 Note: Recommend running iOS and Android from Android Studio.
 
