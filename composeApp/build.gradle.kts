@@ -176,7 +176,7 @@ compose.desktop {
 
             macOS {
                 packageBuildVersion = "28"
-                appStore = true // make true for Mac App Store, false for external distribution
+                appStore = true // make true for App Store distribution, false for external distribution
                 dockName = "Cloud Cover USA"
                 bundleID = "com.realityexpander.cloudcoverusa2"
                 appCategory = "public.app-category.weather"
@@ -228,7 +228,7 @@ compose.desktop {
             obfuscate.set(false)  // disable obfuscation for now
         }
 
-        // For WebView
+        // For WebView (doesn't work when published via to MacOS desktop)
         jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
         jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED")
         if (System.getProperty("os.name").contains("Mac")) {
