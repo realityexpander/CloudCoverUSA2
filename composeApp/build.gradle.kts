@@ -1,6 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.util.*
 
 plugins {
@@ -79,6 +77,8 @@ kotlin {
             implementation(libs.androidx.media3.ui)
 
             implementation(libs.github.compose.webview.multiplatform)
+
+            api("io.coil-kt.coil3:coil-core-android:3.0.0-alpha06")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -241,18 +241,16 @@ compose.desktop {
 }
 
 // Publish to GitHub Pages
-// Task to copy from ./composeApp/build/dist/wasmJs/productionExecutable to ./docs
+// Task to copy from ./composeApp/build/dist/Js/productionExecutable to ./docs
 tasks.register("copyJsToDocs") {
     group = "build"
     doLast {
-//        val wasmJsDir = project.file("./build/dist/Js/productionExecutable")
-        val wasmJsDir = project.file("./build/dist/Js/developmentExecutable")
+        val JsDir = project.file("./build/dist/Js/productionExecutable")
         val docsDir = file(rootDir.path + "/docs")
-        wasmJsDir.copyRecursively(docsDir, overwrite = true)
+        JsDir.copyRecursively(docsDir, overwrite = true)
     }
 }
-//tasks.getByName("jsBrowserDistribution").finalizedBy("copyJsToDocs")
-tasks.getByName("jsBrowserDevelopmentWebpack").finalizedBy("copyJsToDocs")
+tasks.getByName("jsBrowserDistribution").finalizedBy("copyJsToDocs")
 
 
 // Task to clean ./docs (docs is the dir that will be published to GitHub Pages)

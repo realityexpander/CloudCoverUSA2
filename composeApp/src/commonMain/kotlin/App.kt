@@ -298,6 +298,7 @@ fun App() {
                 if (isInitialized) {
                     images.value[currentAnimFrame]?.image?.let {
 
+                        // https://github.com/coil-kt/coil/issues/2246
                         Image(
                             bitmap = it.toBitmap().asComposeImageBitmap(), // Non-Android
 //                            rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // Android
@@ -341,7 +342,7 @@ fun App() {
         // Loading indicator
         AnimatedVisibility(
             loadedImageCount.collectAsState().value < numFrames
-                    || !isAndroidInitialized
+                    || !isAndroidInitialized // Hack to hide loading on Android using AsyncImage
             ,
             enter = EnterTransition.None,
             exit = fadeOut(animationSpec = tween(1500))
