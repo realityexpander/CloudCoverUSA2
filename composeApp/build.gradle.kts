@@ -59,8 +59,9 @@ kotlin {
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.serialization)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor)
+            api(libs.coil.core)
+            api(libs.coil.compose)
+            api(libs.coil.network.ktor)
 
             implementation(libs.slf4j.nop) // prevent silly warning that's been there for years
 
@@ -168,7 +169,7 @@ compose.desktop {
 
             packageName = "Cloud Cover USA 2"
             description = "Cloud Cover USA 2"
-            packageVersion = "1.0.0"
+            packageVersion = "1.1.0"
             copyright = "© 2014-2024 Chris Athanas. All rights reserved."
             vendor = "Chris Athanas"
 
