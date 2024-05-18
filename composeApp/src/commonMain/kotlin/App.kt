@@ -240,8 +240,7 @@ fun App() {
                         },
                         onCancel = { request ->
                             val frameIdx = request.httpHeaders["user-agent"]?.toInt()
-                            addToDebugLog("onCancel, Image frameIdx = $frameIdx")
-                            println("Cancelled, diskCacheKey= ${request.diskCacheKey}")
+                            addToDebugLog("onCancel, Image frameIdx = $frameIdx, diskCacheKey= ${request.diskCacheKey}")
                         }
                     )
                     .crossfade(isAndroidPlatform)
