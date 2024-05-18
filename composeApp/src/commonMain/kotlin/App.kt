@@ -195,6 +195,7 @@ fun App() {
 
         fun addToDebugLog(msg: String) {
             debugLog = "$msg\n$debugLog"
+            println(debugLog)
         }
 
         // Load the images in parallel
@@ -211,11 +212,11 @@ fun App() {
                     .data(url)
                     .listener(
                         onStart = { request ->
-//                            addToDebugLog("Image $finishedCount started loading, finishedCount = ${request.httpHeaders["user-agent"]}.")
+                            // addToDebugLog("Image $finishedCount started loading, frame = ${request.httpHeaders["user-agent"]}.")
                         },
                         onSuccess = { request, response ->
                             if (finishedCount < numFrames) {
-                                addToDebugLog("Image $finishedCount loaded, key=${response.memoryCacheKey}.")
+                                addToDebugLog("Image $finishedCount onSuccess, key=${response.memoryCacheKey}.")
                                 imageWidth = response.image.width.toFloat()
                                 imageHeight = response.image.height.toFloat()
 
@@ -224,9 +225,9 @@ fun App() {
                             }
                         },
                         onError = { request, throwable ->
-                            addToDebugLog("Failed to load ${request.diskCacheKey}, ${throwable.throwable.message}.")
-                            println("Error loading image: ${throwable.throwable.message}, request: ${request.diskCacheKey}")
-
+                            addToDebugLog("onError, Failed to load ${request.diskCacheKey}, " +
+                                    "frame = ${request.httpHeaders["user-agent"]}, " +
+                                    "${throwable.throwable.message}.")
 
                             // Restart from 0
                             frame = numFrames // stop loading
@@ -238,8 +239,8 @@ fun App() {
                             }
                         },
                         onCancel = { request ->
-//                            val frameIdx = request.httpHeaders["user-agent"]?.toInt()
-//                            addToDebugLog("Image cancelled, frameIdx = $frameIdx")
+                            val frameIdx = request.httpHeaders["user-agent"]?.toInt()
+                            addToDebugLog("onCancel, Image frameIdx = $frameIdx")
                             println("Cancelled, diskCacheKey= ${request.diskCacheKey}")
                         }
                     )
