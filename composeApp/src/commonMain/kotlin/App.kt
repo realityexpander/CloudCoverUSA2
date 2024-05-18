@@ -65,6 +65,7 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import coil3.request.ImageResult
@@ -113,11 +114,11 @@ fun App() {
     var isInitialized by remember { mutableStateOf(false) }
 
     val isAndroidPlatform = platform.name.contains("Android")
-    var isAndroidInitialized by remember { mutableStateOf(!isAndroidPlatform) }
-    println("isAndroidPlatform = $isAndroidPlatform")
+    val isDesktopPlatform = platform.name.contains("Java")
+//    var isAndroidInitialized by remember { mutableStateOf(!isAndroidPlatform && !isDesktopPlatform) } // compose-imageloader // LEAVE FOR REFERENCE
+    var isAndroidInitialized by remember { mutableStateOf(false) }
 
     val byteArrayImages = MutableStateFlow(mutableListOf<ByteArray?>())
-    var zz: AsyncImagePainter? = null
     var ir by remember { mutableStateOf<com.seiko.imageloader.model.ImageRequest?>(null) }
     val imageRequestsSeiko =
         MutableStateFlow(mutableListOf<com.seiko.imageloader.model.ImageRequest?>())
@@ -202,14 +203,15 @@ fun App() {
             finishedCount = 0
 
             // Create requests to pre-load images.
-            repeat(numFrames) { frame ->
                 val random = (0..1_000_000).random() // allows for cache busting
+            var frame = 0
+            while(frame < numFrames) {
+                val url = "$rootUrl$frame.jpg?$random"
                 val imageRequest = ImageRequest.Builder(localPlatformContext)
-                    .data("$rootUrl$frame.jpg?$random")
+                    .data(url)
                     .listener(
                         onStart = { request ->
-                            // loadingLog =
-                            //	"$loadingLog\nImage $finishedCount started loading, finishedCount = ${request.httpHeaders["finishedCount"]}."
+//                            addToDebugLog("Image $finishedCount started loading, finishedCount = ${request.httpHeaders["user-agent"]}.")
                         },
                         onSuccess = { request, response ->
                             if (finishedCount < numFrames) {
@@ -225,7 +227,9 @@ fun App() {
                             addToDebugLog("Failed to load ${request.diskCacheKey}, ${throwable.throwable.message}.")
                             println("Error loading image: ${throwable.throwable.message}, request: ${request.diskCacheKey}")
 
+
                             // Restart from 0
+                            frame = numFrames // stop loading
                             scope.launch {
                                 isInternetConnectivityWarningVisible = true
                                 delay(5000.milliseconds)
@@ -234,18 +238,21 @@ fun App() {
                             }
                         },
                         onCancel = { request ->
-                            val frameIdx = request.httpHeaders["finishedCount"]?.toInt()
-                            addToDebugLog("Image cancelled, finishedCount = $frameIdx")
-                            println("Cancelled, request.httpHeaders frameIdx= $frameIdx")
+//                            val frameIdx = request.httpHeaders["user-agent"]?.toInt()
+//                            addToDebugLog("Image cancelled, frameIdx = $frameIdx")
+                            println("Cancelled, diskCacheKey= ${request.diskCacheKey}")
                         }
                     )
                     .crossfade(isAndroidPlatform)
-                    .diskCacheKey("$rootUrl$finishedCount.jpg?$random")
+                    .diskCacheKey(url)
+                    .httpHeaders(NetworkHeaders.Builder().set("user-agent", frame.toString()).build()) // overloading the `user-agent` header to pass frame info (hacky)
                     .build()
 
                 imageRequests += imageRequest
+                frame++
             }
 
+            // LEAVE FOR REFERENCE (compose-imageloader)
 //            byteArrayImages.update { // (compose-imageloader using ByteArray)
 //                mutableListOf<ByteArray?>().apply {
 //                    repeat(numFrames) { add(null) }
@@ -270,6 +277,7 @@ fun App() {
                     imageResults
                 }
 
+                // LEAVE FOR REFERENCE (compose-imageloader)
 //                // Manually load the images (compose-imageloader using raw-byte-data (ByteArray))
 //                byteArrayImages.update { byteArrayImages ->
 //                    ioScope.launch {
