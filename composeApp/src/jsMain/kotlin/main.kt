@@ -1,4 +1,6 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -6,7 +8,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.hamama.kwhi.HtmlView
+import com.seiko.imageloader.ImageLoader
+import com.seiko.imageloader.LocalImageLoader
+import com.seiko.imageloader.component.setupDefaultComponents
+import com.seiko.imageloader.intercept.bitmapMemoryCacheConfig
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.js.Js
 import kotlinx.browser.document
+import okio.FileSystem
+import okio.fakefilesystem.FakeFileSystem
 import org.jetbrains.skiko.wasm.onWasmReady
 
 fun main() {
@@ -14,7 +24,11 @@ fun main() {
 		val title = "Cloud Cover USA 2"
 		@OptIn(ExperimentalComposeUiApi::class)
 		CanvasBasedWindow(title, canvasElementId = "ComposeTarget") {
-			App()
+			CompositionLocalProvider(
+				LocalImageLoader provides remember { generateImageLoader() },
+			) {
+				App()
+			}
 		}
 	}
 }
@@ -68,3 +82,25 @@ actual fun VideoPlayer(
 		}
 	)
 }
+
+private fun generateImageLoader(): ImageLoader {
+	return ImageLoader {
+		commonConfig()
+		components {
+			setupDefaultComponents()
+		}
+		interceptor {
+			bitmapMemoryCacheConfig {
+				maxSize(32 * 1024 * 1024) // 32MB
+			}
+			diskCacheConfig(FakeFileSystem().apply { emulateUnix() }) {
+				directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY)
+				maxSizeBytes(256L * 1024 * 1024) // 256MB
+			}
+		}
+	}
+}
+
+actual val httpEngine: HttpClientEngine
+	get() = Js.create()
+

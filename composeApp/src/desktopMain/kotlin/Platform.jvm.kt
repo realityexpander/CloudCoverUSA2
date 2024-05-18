@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.java.Java
 import kotlinx.coroutines.delay
 
 class JVMPlatform : Platform {
@@ -96,3 +98,7 @@ actual fun VideoPlayer(
 		}
 	}
 }
+
+actual val httpEngine: HttpClientEngine
+	//    get() = OkHttp.create()
+	get() = Java.create()

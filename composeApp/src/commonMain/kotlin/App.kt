@@ -1,5 +1,6 @@
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,17 +40,21 @@ import androidx.compose.material.icons.filled.Today
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asComposeImageBitmap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -56,33 +62,49 @@ import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import coil3.request.ImageResult
 import coil3.request.crossfade
+import com.seiko.imageloader.ImageLoaderConfigBuilder
+import com.seiko.imageloader.intercept.Interceptor
+import com.seiko.imageloader.model.ImageAction
+import com.seiko.imageloader.model.ImageRequestBuilder
+import com.seiko.imageloader.model.NullRequestData
+import com.seiko.imageloader.rememberImageSuccessPainter
+import com.seiko.imageloader.toPainter
+import com.seiko.imageloader.ui.AutoSizeBox
+import com.seiko.imageloader.util.LogPriority
+import com.seiko.imageloader.util.Logger
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.InternalAPI
+import io.ktor.utils.io.core.readBytes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
-//import org.jetbrains.skia.Bitmap
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
 val platform = getPlatform()
 const val isDebugModeActive = false
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, InternalAPI::class, ExperimentalAnimationApi::class)
 @Composable
 @Preview
 fun App() {
     val imageRequests = mutableListOf<ImageRequest>()
 
     val loadedImageCount = MutableStateFlow(0)
-    val images = MutableStateFlow(mutableListOf<ImageResult?>())
+    val imageResults = MutableStateFlow(mutableListOf<ImageResult?>())
 
     var currentAnimFrame by remember { mutableStateOf(0) }
     var finishedCount by remember { mutableStateOf(0) }
@@ -91,8 +113,15 @@ fun App() {
     var isInitialized by remember { mutableStateOf(false) }
 
     val isAndroidPlatform = platform.name.contains("Android")
-//    var isAndroidInitialized by remember { mutableStateOf(!isAndroidPlatform) }
-    var isAndroidInitialized by remember { mutableStateOf(false) }
+    var isAndroidInitialized by remember { mutableStateOf(!isAndroidPlatform) }
+    println("isAndroidPlatform = $isAndroidPlatform")
+
+    val byteArrayImages = MutableStateFlow(mutableListOf<ByteArray?>())
+    var zz: AsyncImagePainter? = null
+    var ir by remember { mutableStateOf<com.seiko.imageloader.model.ImageRequest?>(null) }
+    val imageRequestsSeiko =
+        MutableStateFlow(mutableListOf<com.seiko.imageloader.model.ImageRequest?>())
+
 
     MaterialTheme {
         val localContext = LocalPlatformContext.current
@@ -167,11 +196,12 @@ fun App() {
             debugLog = "$msg\n$debugLog"
         }
 
-        // Load the images all at once
+        // Load the images in parallel
         LaunchedEffect(shouldReset, numFrames) {
             imageRequests.clear()
             finishedCount = 0
 
+            // Create requests to pre-load images.
             repeat(numFrames) { frame ->
                 val random = (0..1_000_000).random() // allows for cache busting
                 val imageRequest = ImageRequest.Builder(localPlatformContext)
@@ -216,19 +246,53 @@ fun App() {
                 imageRequests += imageRequest
             }
 
-            images.update { mutableListOf<ImageResult?>().apply { repeat(numFrames) { add(null) } } }
+//            byteArrayImages.update { // (compose-imageloader using ByteArray)
+//                mutableListOf<ByteArray?>().apply {
+//                    repeat(numFrames) { add(null) }
+//                }
+//            }
+//            imageRequestsSeiko.update {  // (compose-imageloader using Request)
+//                mutableListOf<com.seiko.imageloader.model.ImageRequest?>().apply {
+//                    repeat(numFrames) { add(null) }
+//                }
+//            }
+            imageResults.update { mutableListOf<ImageResult?>().apply { repeat(numFrames) { add(null) } } }
             imageRequests.forEachIndexed { index, imageRequest ->
-                images.update { images ->
+                imageResults.update { imageResults ->
                     ioScope.launch {
-                        images[index] = imageLoader.execute(imageRequest)
+                        imageResults[index] = imageLoader.execute(imageRequest) // pre-loads cache
                         loadedImageCount.update { it + 1 }
 
                         if (loadedImageCount.value >= numFrames)
                             isInitialized = true
                     }
 
-                    images
+                    imageResults
                 }
+
+//                // Manually load the images (compose-imageloader using raw-byte-data (ByteArray))
+//                byteArrayImages.update { byteArrayImages ->
+//                    ioScope.launch {
+//                        val random = (0..1_000_000).random() // allows for cache busting
+//                        val result =
+//                            client.get("$rootUrl$index.jpg?$random")
+//                                .content
+//                                .readRemaining()
+//                                .readBytes()
+//
+//                        byteArrayImages[index] = result
+//                    }
+//
+//                    byteArrayImages
+//                }
+
+//                imageRequestsSeiko.update { imageRequests2 ->  // (compose-imageloader using Request)
+//                    val random = (0..1_000_000).random() // allows for cache busting
+//                    imageRequests2[index] =
+//                        com.seiko.imageloader.model.ImageRequest("$rootUrl$index.jpg?$random")
+//
+//                    imageRequests2
+//                }
             }
         }
 
@@ -242,14 +306,14 @@ fun App() {
                 if (currentAnimFrame == 0)
                     delay(500.milliseconds)
                 else
-                    delay(100.milliseconds)
+                    delay(150.milliseconds)
 
                 if (!isInitialized) return@LaunchedEffect
-                currentAnimFrame = (currentAnimFrame + 1) % (images.value.size)
+                currentAnimFrame = (currentAnimFrame + 1) % numFrames
 
                 totalFrames++
-                if(totalFrames > images.value.size * 2) { // 2 passes (hack to hide the loading on Android)
-                   isAndroidInitialized = true
+                if (totalFrames > imageResults.value.size * 2) { // 2 passes (hack to hide the loading on Android)
+                    isAndroidInitialized = true
                 }
             }
         }
@@ -268,8 +332,8 @@ fun App() {
         // Show the Map Animation Image
         BoxWithConstraints(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black),
+                .background(Color.Black)
+                .fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
             // Setup pan/zoom (not rotation) transformable state
@@ -290,22 +354,38 @@ fun App() {
                     )
                 }
 
-            // Show Satellite image
+            // Show Satellite Animation (flip thru frames)
             Column(
-                Modifier.fillMaxWidth(),
+                Modifier
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isInitialized) {
-                    images.value[currentAnimFrame]?.image?.let {
+                    imageResults.value[currentAnimFrame]?.image?.let { imageResult ->  // Use with Image
+//                    byteArrayImages.value[currentAnimFrame]?.let { imageByteArray -> // Use with ImageItem (compose-imageloader)
 
                         // https://github.com/coil-kt/coil/issues/2246
-                        Image(
-                            bitmap = it.toBitmap().asComposeImageBitmap(), // Non-Android
-//                            rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // Android
+                        Image( // JetBrains Standard Composable Image
+//                      ImageItem( // (compose-imageloader)
+
+                            // (coil3 using Request)
+//                      rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // Android & All Platforms, use Image, works smoothly
+                        rememberAsyncImagePainter(imageResults.value[currentAnimFrame]!!.request), // Android & All Platforms, works smoothly
+
+                            // (compose-imageloader)
+//                            org.jetbrains.skia.Image.makeFromEncoded(imageByteArray).toComposeImageBitmap(), // Non-android only, works smoothly
+//                            bitmap = imageResult.toBitmap().asComposeImageBitmap(), // Non-Android only, use Image, WORKS smoothly
+
+//                            rememberAsyncImagePainter(imageByteArray), // works but flashy
+//                            rememberAsyncImagePainter(byteArrayImages.value[currentAnimFrame]), // works but flashy
+//                            rememberAsyncImagePainter(imageByteArray), // works but flashy
+//                            imageByteArray, // works with ImageItem, flashy
+//                            byteArrayImages.value[currentAnimFrame]!!, // works w/ ImageItem, flashy
+//                            remember(currentAnimFrame) { byteArrayImages.value[currentAnimFrame]!! }, // works w/ ImageItem, flashy
+
                             contentDescription = "image",
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color.Black)
                                 .graphicsLayer {
                                     scaleX = scale
                                     scaleY = scale
@@ -339,10 +419,10 @@ fun App() {
             }
         }
 
-        // Loading indicator
+        // Loading indicator (to hide image loading flicker)
         AnimatedVisibility(
             loadedImageCount.collectAsState().value < numFrames
-                    || !isAndroidInitialized // Hack to hide loading on Android using AsyncImage
+                    || !isAndroidInitialized // Hack to hide loading on Android using rememberAsyncImagePainter
             ,
             enter = EnterTransition.None,
             exit = fadeOut(animationSpec = tween(1500))
@@ -374,6 +454,17 @@ fun App() {
                     .fillMaxSize()
                     .background(Color.Black),
             ) {
+
+                VideoPlayer(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .offset(x = 0.dp, y = 50.dp), // offset to avoid overlap with hide button
+                    url = "https://www.ssec.wisc.edu/data/us_comp/us_comp_large.mp4",
+                    onSetupComplete = {
+                        isLoadingMovie = false
+                    }
+                )
+
                 // Show 5 day movie
                 Row(
                     Modifier.fillMaxWidth(),
@@ -385,7 +476,10 @@ fun App() {
                             isLoadingMovie = true
                         },
                     ) {
-                        Text("Hide")
+                        Text(
+                            "Hide",
+                            color=Color.White
+                        )
                     }
 
                     // Progress indicator
@@ -413,16 +507,6 @@ fun App() {
                     }
 
                 }
-
-                VideoPlayer(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .offset(x = 0.dp, y = 50.dp), // offset to avoid overlap with hide button
-                    url = "https://www.ssec.wisc.edu/data/us_comp/us_comp_large.mp4",
-                    onSetupComplete = {
-                        isLoadingMovie = false
-                    }
-                )
             }
         }
 
@@ -614,7 +698,7 @@ fun App() {
                 // About info
                 AnimatedVisibility(isShowAboutInfo) {
                     Text(
-                        "Cloud Cover USA 2.0\n" +
+                        "Cloud Cover USA 2.1\n" +
                                 "by Chris Athanas\n" +
                                 "realityexpanderdev@gmail.com\n" +
                                 "github.com/realityexpander\n",
@@ -647,4 +731,128 @@ fun App() {
         }
     }
 }
+
+@Composable
+fun ImageItem(
+    data: Any,
+    modifier: Modifier = Modifier.aspectRatio(1f),
+    contentScale: ContentScale = ContentScale.Crop,
+    contentDescription: String = "image",
+    block: (ImageRequestBuilder.() -> Unit)? = null,
+) {
+    Box(modifier, Alignment.Center) {
+        val dataState by rememberUpdatedState(data)
+        val blockState by rememberUpdatedState(block)
+        val request by remember {
+            derivedStateOf {
+                com.seiko.imageloader.model.ImageRequest {
+                    data(dataState)
+                    addInterceptor(NullDataInterceptor)
+                    // components {
+                    //     add(customKtorUrlFetcher)
+                    // }
+                    options {
+                        maxImageSize = 512
+                    }
+                    blockState?.invoke(this)
+                }
+            }
+        }
+
+        AutoSizeBox(
+            request,
+            Modifier.matchParentSize(),
+        ) { action ->
+            when (action) {
+                is ImageAction.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is ImageAction.Success -> {
+                    Image(
+                        rememberImageSuccessPainter(action),
+                        contentDescription = contentDescription,
+                        contentScale = contentScale,
+                        modifier = Modifier.matchParentSize(),
+                    )
+                }
+
+                is ImageAction.Failure -> {
+                    Text(action.error.message ?: "Error")
+                }
+            }
+        }
+    }
+}
+
+// For Compose-imageloader
+fun ImageLoaderConfigBuilder.commonConfig() {
+    logger = object : Logger {
+        override fun log(
+            priority: LogPriority,
+            tag: String,
+            data: Any?,
+            throwable: Throwable?,
+            message: String,
+        ) {
+//            DebugLogger.log(
+//                severity = when (priority) {
+//                    LogPriority.VERBOSE -> Severity.Verbose
+//                    LogPriority.DEBUG -> Severity.Debug
+//                    LogPriority.INFO -> Severity.Info
+//                    LogPriority.WARN -> Severity.Warn
+//                    LogPriority.ERROR -> Severity.Error
+//                    LogPriority.ASSERT -> Severity.Assert
+//                },
+//                tag = tag,
+//                throwable = throwable,
+//                message = buildString {
+//                    if (data != null) {
+//                        append("[image data] ")
+//                        append(data.toString().take(100))
+//                        append('\n')
+//                    }
+//                    append("[message] ")
+//                    append(message)
+//                },
+//            )
+            println(
+                "[$tag] $priority: $message, ${
+                    data.toString().take(100)
+                }, ${throwable?.message}"
+            )
+        }
+
+        override fun isLoggable(priority: LogPriority) = priority >= LogPriority.DEBUG
+    }
+    components {
+        // add(MokoResourceFetcher.Factory())
+        //add(ComposeResourceFetcher.Factory())
+    }
+    interceptor {
+        //addInterceptor(NinePatchInterceptor())
+    }
+}
+
+/**
+ * return empty painter if request is null or empty - For Compose-imageloader
+ */
+object NullDataInterceptor : Interceptor {
+
+    override suspend fun intercept(chain: Interceptor.Chain): com.seiko.imageloader.model.ImageResult {
+        val data = chain.request.data
+        if (data === NullRequestData || data is String && data.isEmpty()) {
+            return com.seiko.imageloader.model.ImageResult.OfPainter(
+                painter = EmptyPainter,
+            )
+        }
+        return chain.proceed(chain.request)
+    }
+
+    private object EmptyPainter : Painter() {
+        override val intrinsicSize: Size get() = Size.Unspecified
+        override fun DrawScope.onDraw() {}
+    }
+}
+
 

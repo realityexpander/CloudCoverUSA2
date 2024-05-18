@@ -14,6 +14,13 @@ YouTube Series playlist: https://www.youtube.com/playlist?list=PLzUxWOrVXB4RVcPI
 To run iOS & Android, select from the Run Configuration menu. 
 Note: Recommend running iOS and Android from Android Studio.
 
+To run Web (Javascript target):
+`./gradlew composeApp:jsBrowserRun`
+
+To Compile Web Production & Deploy to Github Pages (`/docs` folder)
+`./gradlew composeApp:jsBrowserDistribution` # Faster
+`./gradlew composeApp:copyJsToDocs` # Copy Distribution to Docs
+
 - Note: Recommend running desktop from IntelliJ
 To run desktop:
 `./gradlew composeApp:run`

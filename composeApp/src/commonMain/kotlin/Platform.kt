@@ -1,6 +1,7 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import io.ktor.client.engine.HttpClientEngine
 
 interface Platform {
 	val name: String
@@ -21,3 +22,5 @@ expect fun VideoPlayer(
 	onSetupComplete: () -> Unit = {},
 	onCloseVideoWindow: () -> Unit = {}
 )
+
+expect val httpEngine: HttpClientEngine

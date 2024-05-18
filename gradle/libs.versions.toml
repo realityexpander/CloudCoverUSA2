@@ -17,9 +17,11 @@ compose-plugin = "1.6.10-dev1584"  # -dev1584 to use the `minimumSystemVersion`
 compose-material-icons-extended = "1.6.1"  # usually the same as compose, and seems to lag behind.
 coreKtx = "1.12.0"
 githubComposeWebviewMultiplatform = "1.9.2"
+imageLoader = "1.7.8"
 junit = "4.13.2"
 kotlin = "1.9.23"
 kotlin-coroutines = "1.8.0"
+kotlinx-serialization = "1.6.3"
 #ktor = "2.3.10"
 #ktor = "3.0.0-beta-1"
 ktor = "3.0.0-wasm2"
@@ -29,7 +31,7 @@ vlcj = "4.8.2"
 slf4jNop = "2.0.12"
 androidx-coreSplashscreen = "1.0.1"
 uiGraphicsAndroid = "1.6.7"
-
+okio = "3.9.0"
 
 [libraries]
 androidx-core-ktx-v1120 = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,7 @@ androidx-media3-exoplayer = { group = "androidx.media3", name="media3-exoplayer"
 androidx-media3-exoplayer-dash = { group = "androidx.media3", name="media3-exoplayer-dash", version.ref = "media3" }
 androidx-media3-ui = { group = "androidx.media3", name="media3-ui", version.ref = "media3" }
 github-compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "githubComposeWebviewMultiplatform" }
+image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imageLoader" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
@@ -53,8 +56,10 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose-material-icons-extended" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilCompose" }
 coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coilCompose" }
+coil-core-android = { module = "io.coil-kt.coil3:coil-core-android", version.ref = "coilCompose" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilCompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref="kotlin-coroutines" }
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -64,14 +69,19 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 vlcj = { group = "uk.co.caprica", name="vlcj", version.ref = "vlcj" }
 slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4jNop" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-coreSplashscreen" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
+
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio" }
 
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

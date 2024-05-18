@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlin.plugin.serialization)
 }
 
 kotlin {
@@ -56,6 +57,7 @@ kotlin {
 
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.serialization)
             api(libs.coil.core)
             api(libs.coil.compose)
@@ -65,6 +67,8 @@ kotlin {
 
             // for vlcj - necessary?
             implementation(libs.kotlinx.coroutines.core)
+
+            api(libs.image.loader)
         }
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -75,10 +79,11 @@ kotlin {
             implementation(libs.androidx.media3.exoplayer)
             implementation(libs.androidx.media3.exoplayer.dash)
             implementation(libs.androidx.media3.ui)
+            implementation(libs.androidx.media3.exoplayer)
 
             implementation(libs.github.compose.webview.multiplatform)
 
-            api("io.coil-kt.coil3:coil-core-android:3.0.0-alpha06")
+            api(libs.coil.core.android)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -100,6 +105,8 @@ kotlin {
             // js target has problems using fetch from js, always gives CORS issues.
             implementation(libs.ktor.client.js)
             implementation(compose.html.core) // Required for Compose Web/Canvas on JS
+
+            implementation(libs.okio.fakefilesystem)
         }
     }
 }
@@ -120,8 +127,8 @@ android {
         applicationId = "com.realityexpander.cloudcoverusa2"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 4
-        versionName = "1.1"
+        versionCode = 5
+        versionName = "2.1"
     }
     packaging {
         resources {
@@ -143,6 +150,8 @@ android {
         // Splash Screen
         implementation(libs.androidx.core.splashscreen)
         debugImplementation(libs.androidx.core.splashscreen)
+
+        implementation(libs.androidx.media3.exoplayer)
     }
     kotlin {
         jvmToolchain(17)
@@ -169,7 +178,7 @@ compose.desktop {
 
             packageName = "Cloud Cover USA 2"
             description = "Cloud Cover USA 2"
-            packageVersion = "1.1.0"
+            packageVersion = "2.1.0"
             copyright = "© 2014-2024 Chris Athanas. All rights reserved."
             vendor = "Chris Athanas"
 
@@ -250,7 +259,8 @@ tasks.register("copyJsToDocs") {
         JsDir.copyRecursively(docsDir, overwrite = true)
     }
 }
-tasks.getByName("jsBrowserDistribution").finalizedBy("copyJsToDocs")
+tasks.getByName("jsBrowserDistribution").finalizedBy("copyJsToDocs") // faster to deploy
+//tasks.getByName("jsBrowserProductionWebpack").finalizedBy("copyJsToDocs") // More compressed
 
 
 // Task to clean ./docs (docs is the dir that will be published to GitHub Pages)

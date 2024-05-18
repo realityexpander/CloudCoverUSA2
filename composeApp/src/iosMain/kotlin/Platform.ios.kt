@@ -6,6 +6,8 @@ import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.seiko.imageloader.ImageLoader
+import com.seiko.imageloader.createDefaultIOS
 import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents

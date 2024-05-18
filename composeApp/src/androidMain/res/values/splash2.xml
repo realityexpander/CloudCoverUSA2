@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.App.SplashScreen" parent="Theme.SplashScreen">
-<!--    <style name="Theme.App.Starting" parent="Theme.AppCompat.Light.NoActionBar">-->
         <item name="windowSplashScreenBackground">@color/black</item>
 
         <!-- for must include even if not animated -->
-<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>-->
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
 
         <!-- for animation duration -->
@@ -16,7 +14,5 @@
 
         <!-- After splash screen is shown, use the following theme -->
 <!--        <item name="postSplashScreenTheme">@style/Theme.AppCompat.DayNight.NoActionBar</item>-->
-<!--        <item name="postSplashScreenTheme">@style/Theme.AppCompat.DayNight.NoActionBar</item>-->
-
     </style>
 </resources>
