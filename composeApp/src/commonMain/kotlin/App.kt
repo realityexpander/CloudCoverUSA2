@@ -225,7 +225,7 @@ fun App() {
                             }
                         },
                         onError = { request, throwable ->
-                            addToDebugLog("onError, Failed to load ${request.diskCacheKey}, " +
+                            addToDebugLog("onError, Failed to load, diskCacheKey = ${request.diskCacheKey}, " +
                                     "frame = ${request.httpHeaders["user-agent"]}, " +
                                     "${throwable.throwable.message}.")
 
@@ -373,16 +373,17 @@ fun App() {
 //                    byteArrayImages.value[currentAnimFrame]?.let { imageByteArray -> // Use with ImageItem (compose-imageloader)
 
                         // https://github.com/coil-kt/coil/issues/2246
-                        Image( // JetBrains Standard Composable Image
+                        Image(
+                            // JetBrains Standard Composable Image
 //                      ImageItem( // (compose-imageloader)
 
                             // (coil3 using Request)
-//                      rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // Android & All Platforms, use Image, works smoothly
-                        rememberAsyncImagePainter(imageResults.value[currentAnimFrame]!!.request), // Android & All Platforms, works smoothly
+                            rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // Android & All Platforms, use Image, works smoothly BEST FOR ALL PLATFORMS
+//                        rememberAsyncImagePainter(imageResults.value[currentAnimFrame]!!.request), // Android & All Platforms, works smoothly, except JS uses low-res image
 
                             // (compose-imageloader)
+//                            bitmap = imageResult.toBitmap().asComposeImageBitmap(), // Non-Android only, use Image, WORKS smoothly, BEST for JS
 //                            org.jetbrains.skia.Image.makeFromEncoded(imageByteArray).toComposeImageBitmap(), // Non-android only, works smoothly
-//                            bitmap = imageResult.toBitmap().asComposeImageBitmap(), // Non-Android only, use Image, WORKS smoothly
 
 //                            rememberAsyncImagePainter(imageByteArray), // works but flashy
 //                            rememberAsyncImagePainter(byteArrayImages.value[currentAnimFrame]), // works but flashy
@@ -409,6 +410,7 @@ fun App() {
                                     contentWidth = it.size.width
                                     contentHeight = it.size.height
 
+                                    // Scale to fit in window/screen
                                     if (isFirstFrame && contentWidth > 0 && imageWidth > 0) {
                                         // Set correct scale for a given image and screen size
                                         scale =

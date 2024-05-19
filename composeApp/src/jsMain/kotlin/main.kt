@@ -103,4 +103,3 @@ private fun generateImageLoader(): ImageLoader {
 
 actual val httpEngine: HttpClientEngine
 	get() = Js.create()
-
