@@ -195,7 +195,7 @@ fun App() {
 
         fun addToDebugLog(msg: String) {
             debugLog = "$msg\n$debugLog"
-            println(debugLog)
+            println(msg)
         }
 
         // Load the images in parallel
