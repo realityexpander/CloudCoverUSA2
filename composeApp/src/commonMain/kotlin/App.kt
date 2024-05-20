@@ -52,7 +52,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
@@ -63,9 +62,7 @@ import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.annotation.ExperimentalCoilApi
-import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberAsyncImagePainter
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
 import coil3.request.ImageRequest
@@ -77,16 +74,10 @@ import com.seiko.imageloader.model.ImageAction
 import com.seiko.imageloader.model.ImageRequestBuilder
 import com.seiko.imageloader.model.NullRequestData
 import com.seiko.imageloader.rememberImageSuccessPainter
-import com.seiko.imageloader.toPainter
 import com.seiko.imageloader.ui.AutoSizeBox
 import com.seiko.imageloader.util.LogPriority
 import com.seiko.imageloader.util.Logger
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.InternalAPI
-import io.ktor.utils.io.core.readBytes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -116,8 +107,7 @@ fun App() {
 
     val isAndroidPlatform = platform.name.contains("Android")
     val isDesktopPlatform = platform.name.contains("Java")
-//    var isAndroidInitialized by remember { mutableStateOf(!isAndroidPlatform && !isDesktopPlatform) } // compose-imageloader // LEAVE FOR REFERENCE
-    var isAndroidInitialized by remember { mutableStateOf(false) }
+    var isViewFullyInitialized by remember { mutableStateOf(false) }
 
     val byteArrayImages = MutableStateFlow(mutableListOf<ByteArray?>())
     val imageRequestsSeiko =
@@ -187,7 +177,7 @@ fun App() {
                 isInitialized = false
                 currentAnimFrame = 0
                 finishedCount = 0
-                isAndroidInitialized = false
+                isViewFullyInitialized = false
 
                 shouldReset = !shouldReset // triggers reset by changing the value
             }
@@ -321,7 +311,7 @@ fun App() {
 
                 totalFrames++
                 if (totalFrames > imageResults.value.size * 2) { // 2 passes (hack to hide the loading on Android)
-                    isAndroidInitialized = true
+                    isViewFullyInitialized = true
                 }
             }
         }
@@ -408,7 +398,7 @@ fun App() {
                         )
 
 //                    // LEAVE FOR REFERENCE (compose-imageloader vs coil3)
-//
+                      if(false) {
 //                    imageResults.value[currentAnimFrame]?.image?.let { image ->  // Use with Image
 //                    byteArrayImages.value[currentAnimFrame]?.let { imageByteArray -> // Use with ImageItem (compose-imageloader)
 //                        // https://github.com/coil-kt/coil/issues/2246
@@ -463,7 +453,10 @@ fun App() {
 //                                },
 //                            contentScale = ContentScale.None,
 //                        )
+                        }
                     }
+
+
                 }
             }
         }
@@ -471,7 +464,7 @@ fun App() {
         // Loading indicator (to hide image loading flicker)
         AnimatedVisibility(
             loadedImageCount.collectAsState().value < numFrames
-                    || !isAndroidInitialized // Hack to hide loading on Android using rememberAsyncImagePainter
+                    || !isViewFullyInitialized // Hack to hide loading on Android using rememberAsyncImagePainter
             ,
             enter = EnterTransition.None,
             exit = fadeOut(animationSpec = tween(1500))
