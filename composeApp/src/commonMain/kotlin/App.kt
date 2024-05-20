@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
@@ -369,29 +370,11 @@ fun App() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isInitialized) {
-                    imageResults.value[currentAnimFrame]?.image?.let { imageResult ->  // Use with Image
-//                    byteArrayImages.value[currentAnimFrame]?.let { imageByteArray -> // Use with ImageItem (compose-imageloader)
+                    imageResults.value[currentAnimFrame]?.image?.let { image ->  // Use with Image
 
-                        // https://github.com/coil-kt/coil/issues/2246
-                        Image(
-                            // JetBrains Standard Composable Image
-//                      ImageItem( // (compose-imageloader)
-
-                            // (coil3 using Request)
-                            rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // Android & All Platforms, use Image, works smoothly BEST FOR ALL PLATFORMS
-//                        rememberAsyncImagePainter(imageResults.value[currentAnimFrame]!!.request), // Android & All Platforms, works smoothly, except JS uses low-res image
-
-                            // (compose-imageloader)
-//                            bitmap = imageResult.toBitmap().asComposeImageBitmap(), // Non-Android only, use Image, WORKS smoothly, BEST for JS
-//                            org.jetbrains.skia.Image.makeFromEncoded(imageByteArray).toComposeImageBitmap(), // Non-android only, works smoothly
-
-//                            rememberAsyncImagePainter(imageByteArray), // works but flashy
-//                            rememberAsyncImagePainter(byteArrayImages.value[currentAnimFrame]), // works but flashy
-//                            rememberAsyncImagePainter(imageByteArray), // works but flashy
-//                            imageByteArray, // works with ImageItem, flashy
-//                            byteArrayImages.value[currentAnimFrame]!!, // works w/ ImageItem, flashy
-//                            remember(currentAnimFrame) { byteArrayImages.value[currentAnimFrame]!! }, // works w/ ImageItem, flashy
-
+                        PlatformImage(
+                            coil3Image = image, // for any platform except Android
+                            coil3ImageRequest = imageRequests[currentAnimFrame], // for Android
                             contentDescription = "image",
                             modifier = Modifier
                                 .fillMaxSize()
@@ -424,6 +407,62 @@ fun App() {
                                 },
                             contentScale = ContentScale.None,
                         )
+
+                      // LEAVE FOR REFERENCE (compose-imageloader vs coil3)
+//                    imageResults.value[currentAnimFrame]?.image?.let { image ->  // Use with Image
+//                    byteArrayImages.value[currentAnimFrame]?.let { imageByteArray -> // Use with ImageItem (compose-imageloader)
+//                        // https://github.com/coil-kt/coil/issues/2246
+//                        Image(
+//                            // JetBrains Standard Composable Image
+////                      ImageItem( // (compose-imageloader)
+//
+//                            // (coil3 using Request)
+//                            rememberAsyncImagePainter(imageRequests[currentAnimFrame]), // * All Platforms, use Image, works smoothly EXCEPT JS uses low-res image
+////                        rememberAsyncImagePainter(imageResults.value[currentAnimFrame]!!.request), // Android & All Platforms, works smoothly, EXCEPT JS uses low-res image
+//
+//                            // (compose-imageloader)
+////                            bitmap = image.toBitmap().asComposeImageBitmap(), // * Non-Android only, use Image, WORKS smoothly, BEST for JS
+////                            org.jetbrains.skia.Image.makeFromEncoded(imageByteArray).toComposeImageBitmap(), // Non-android only, works smoothly
+//
+////                            rememberAsyncImagePainter(imageByteArray), // works but flashy
+////                            rememberAsyncImagePainter(byteArrayImages.value[currentAnimFrame]), // works but flashy
+////                            rememberAsyncImagePainter(imageByteArray), // works but flashy
+////                            imageByteArray, // works with ImageItem, flashy
+////                            byteArrayImages.value[currentAnimFrame]!!, // works w/ ImageItem, flashy
+////                            remember(currentAnimFrame) { byteArrayImages.value[currentAnimFrame]!! }, // works w/ ImageItem, flashy
+//
+//                            contentDescription = "image",
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//                                .graphicsLayer {
+//                                    scaleX = scale
+//                                    scaleY = scale
+//                                    translationX = offset.x
+//                                    translationY = offset.y
+//                                    this.rotationZ = rotationZ  // allow rotation?
+//                                }
+//                                .transformable(
+//                                    state,
+//                                    lockRotationOnZoomPan = true
+//                                )
+//                                .onGloballyPositioned {
+//                                    contentWidth = it.size.width
+//                                    contentHeight = it.size.height
+//
+//                                    // Scale to fit in window/screen
+//                                    if (isFirstFrame && contentWidth > 0 && imageWidth > 0) {
+//                                        // Set correct scale for a given image and screen size
+//                                        scale =
+//                                            max(
+//                                                contentHeight / imageHeight,
+//                                                contentWidth / imageWidth
+//                                            )
+//
+//                                        isFirstFrame = false
+//                                    }
+//                                },
+//                            contentScale = ContentScale.None,
+//                        )
                     }
                 }
             }

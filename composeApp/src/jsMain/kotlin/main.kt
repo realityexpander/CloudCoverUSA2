@@ -1,12 +1,19 @@
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asComposeImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.CanvasBasedWindow
+import coil3.Image
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.AsyncImagePainter.State.Empty.painter
+import coil3.compose.rememberAsyncImagePainter
 import com.hamama.kwhi.HtmlView
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.LocalImageLoader
@@ -18,6 +25,9 @@ import kotlinx.browser.document
 import okio.FileSystem
 import okio.fakefilesystem.FakeFileSystem
 import org.jetbrains.skiko.wasm.onWasmReady
+
+import coil3.request.ImageRequest
+import org.jetbrains.compose.web.dom.Text
 
 fun main() {
 	onWasmReady {
@@ -103,3 +113,23 @@ private fun generateImageLoader(): ImageLoader {
 
 actual val httpEngine: HttpClientEngine
 	get() = Js.create()
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+actual fun PlatformImage(
+	modifier: Modifier,
+	coil3Image: Image?,
+	coil3ImageRequest: ImageRequest?,
+	contentScale: ContentScale,
+	contentDescription: String?
+) {
+	coil3ImageRequest ?: Text("Image request is null")
+
+	// Use the Skia library to render the image
+	Image(
+		modifier = modifier,
+		bitmap = coil3Image?.toBitmap()?.asComposeImageBitmap() ?: return,
+		contentDescription = contentDescription,
+		contentScale = contentScale
+	)
+}

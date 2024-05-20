@@ -4,6 +4,8 @@ import android.os.Build
 import android.widget.MediaController
 import android.widget.VideoView
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -12,11 +14,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.ColorInfo
+import coil3.Image
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -119,5 +126,25 @@ actual fun VideoPlayer(
         update = {
             println("width: ${it.width}, height: ${it.height}")
         }
+    )
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+actual fun PlatformImage(
+    modifier: Modifier,
+    coil3Image: Image?,
+    coil3ImageRequest: ImageRequest?,
+    contentScale: ContentScale,
+    contentDescription: String?
+) {
+    coil3ImageRequest ?: Text("Image request is null")
+
+    // Use the Skia library to render the image
+    Image(
+        modifier = modifier,
+		painter = rememberAsyncImagePainter(coil3ImageRequest), // for Android
+        contentDescription = contentDescription,
+        contentScale = contentScale
     )
 }
