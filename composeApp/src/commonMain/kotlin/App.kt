@@ -120,7 +120,6 @@ fun App() {
     var isAndroidInitialized by remember { mutableStateOf(false) }
 
     val byteArrayImages = MutableStateFlow(mutableListOf<ByteArray?>())
-    var ir by remember { mutableStateOf<com.seiko.imageloader.model.ImageRequest?>(null) }
     val imageRequestsSeiko =
         MutableStateFlow(mutableListOf<com.seiko.imageloader.model.ImageRequest?>())
 
