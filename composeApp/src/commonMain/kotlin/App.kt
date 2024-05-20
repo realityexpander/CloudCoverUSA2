@@ -233,7 +233,7 @@ fun App() {
                             addToDebugLog("onCancel, Image frameIdx = $frameIdx, diskCacheKey= ${request.diskCacheKey}")
                         }
                     )
-                    .crossfade(isAndroidPlatform)
+                    .crossfade(isAndroidPlatform) // required to make the android platform not flicker
                     .diskCacheKey(url)
                     .httpHeaders(NetworkHeaders.Builder().set("user-agent", frame.toString()).build()) // overloading the `user-agent` header to pass frame info (hacky)
                     .build()
@@ -455,8 +455,6 @@ fun App() {
 //                        )
                         }
                     }
-
-
                 }
             }
         }
