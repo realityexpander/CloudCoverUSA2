@@ -407,7 +407,8 @@ fun App() {
                             contentScale = ContentScale.None,
                         )
 
-                      // LEAVE FOR REFERENCE (compose-imageloader vs coil3)
+//                    // LEAVE FOR REFERENCE (compose-imageloader vs coil3)
+//
 //                    imageResults.value[currentAnimFrame]?.image?.let { image ->  // Use with Image
 //                    byteArrayImages.value[currentAnimFrame]?.let { imageByteArray -> // Use with ImageItem (compose-imageloader)
 //                        // https://github.com/coil-kt/coil/issues/2246
