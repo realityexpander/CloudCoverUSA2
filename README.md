@@ -170,6 +170,10 @@ export JAVA_HOME=`/usr/libexec/java_home -v 21`  # Change to version 21
     - Set option headers(?)
 
 
+### Alternative Image Loaders
+ - https://coil-kt.github.io/coil/upgrading_to_coil3/
+ - https://github.com/qdsfdhvh/compose-imageloader
+ - 
 ## Last commit built with:
 ```
 * Android Studio Koala | 2023.3.2 Canary 2
