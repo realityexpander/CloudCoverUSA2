@@ -1,4 +1,4 @@
-# Cloud Cover USA 2
+# Cloud Cover USA 2 - KMP Cross-plaform App
 Shows animated current cloud cover for North America, Mexico and Canada
 
 [<img src="app_publishing/app_store.png" width="150">](https://apps.apple.com/us/app/cloud-cover-usa-2i/id6499233780)
